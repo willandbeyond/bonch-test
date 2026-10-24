@@ -53,7 +53,7 @@ async function loadProtectedNotes(){
  noteState='Loading private notes…';
  try{
   const token=await window.trackerClerk?.session?.getToken();
-  if(!token)throw Error('No active session token');
+  if(!token){noteState='Private notes: no active Clerk session token';return}
   const response=await fetch(NOTES_API+'/api/admin/notes',{headers:{Authorization:'Bearer '+token},cache:'no-store'});
   if(!response.ok){noteState=response.status===403?'Private notes require administrator access':'Private notes unavailable ('+response.status+')';return}
   const data=await response.json();
@@ -62,7 +62,7 @@ async function loadProtectedNotes(){
   for(const row of data.notes||[])protectedNotes.set(String(row.trip_key),row.note);
   noteState='No note recorded';notesEditable=true;
   window.dispatchEvent(new Event('tracker-notes-loaded'));
- }catch(e){console.error('Private notes request failed',e);noteState='Private notes temporarily unavailable'}
+ }catch(e){console.error('Private notes request failed',e);noteState='Private notes connection error ('+(e?.name||'unknown')+'): '+(e?.message||'unknown error')}
 }
 window.addEventListener('tracker-auth-changed',()=>{loadProtectedNotes()});
 window.addEventListener('tracker-notes-loaded',()=>{const dialog=document.getElementById('tripdialog');if(dialog?.open&&typeof window.refreshOpenTrip==='function')window.refreshOpenTrip()});
