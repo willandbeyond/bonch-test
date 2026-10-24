@@ -23,8 +23,6 @@ jobs:
         run: |
           mkdir -p dist
           cp index.html services.html train-*.png dist/
-          BUILD_TIME=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-          sed -i "s/__BUILD_ISO__/$BUILD_TIME/g" dist/index.html dist/services.html
 
       - name: Deploy to bonch-dev Worker
         uses: cloudflare/wrangler-action@v3
