@@ -23,10 +23,10 @@ async function authenticate(request,env){
  const valid=await crypto.subtle.verify('RSASSA-PKCS1-v1_5',key,bytes(parts[2]),new TextEncoder().encode(parts[0]+'.'+parts[1]));
  return valid?payload:null;
 }
-export default {async fetch(request,env){
+async function handle(request,env){
  const url=new URL(request.url);
  if(!url.pathname.startsWith('/api/'))return env.ASSETS.fetch(request);
- if(request.method==='OPTIONS')return new Response(null,{status:405,headers:{Allow:'GET, POST'}});
+ if(request.method==='OPTIONS')return new Response(null,{status:204,headers:{'Access-Control-Allow-Methods':'GET, POST, DELETE, OPTIONS','Access-Control-Allow-Headers':'Authorization, Content-Type','Access-Control-Max-Age':'600'}});
  if(!['GET','POST','DELETE'].includes(request.method))return json({error:'Method not allowed'},405);
  if(request.method==='POST'&&!['/api/admin/notes/import'].includes(url.pathname)&&!/^\/api\/admin\/notes\/(?:0|[1-9][0-9]{0,3})$/.test(url.pathname))return json({error:'Method not allowed'},405);
  if(request.method==='DELETE'&&!/^\/api\/admin\/notes\/(?:0|[1-9][0-9]{0,3})$/.test(url.pathname))return json({error:'Method not allowed'},405);
@@ -81,4 +81,16 @@ export default {async fetch(request,env){
   }catch(e){console.error('D1 notes query failed',e);return json({error:'Database not initialized'},503)}
  }
  return json({error:'Not found'},404);
+}
+const allowedOrigins=new Set(['https://test.bonch.fyi','https://bonch-dev.will-boncher.workers.dev']);
+export default {async fetch(request,env){
+ const origin=request.headers.get('Origin');
+ const isApi=new URL(request.url).pathname.startsWith('/api/');
+ if(isApi&&request.method==='OPTIONS'&&!allowedOrigins.has(origin))return new Response(null,{status:403});
+ const response=await handle(request,env);
+ if(!isApi||!allowedOrigins.has(origin))return response;
+ const headers=new Headers(response.headers);
+ headers.set('Access-Control-Allow-Origin',origin);
+ headers.set('Vary','Origin');
+ return new Response(response.body,{status:response.status,statusText:response.statusText,headers});
 }};
