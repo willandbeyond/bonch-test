@@ -28,8 +28,8 @@ try{await clerk.load();function sync(){const versionLink=document.querySelector(
 sign.disabled=false;sign.addEventListener('click',()=>clerk.openSignIn());sync();clerk.addListener(sync)}
 catch(e){console.error('Clerk initialization failed',e);error.textContent='Sign-in temporarily unavailable';error.style.display='inline';sign.disabled=true}
 });
-</script></head><body>
-<header><div class="brand">bonch<span>.fyi</span> / trains</div><div class="auth-controls"><span id="auth-error" class="auth-error" role="status"></span><button id="sign-in-button" class="auth-button" disabled>Sign in</button><div id="signed-in-user" class="auth-user"><span id="signed-in-name" class="auth-user-name"></span><span id="clerk-user-button"></span></div></div></header>
+</script><style>.dev-domain-badge{display:inline-block;background:#b4232d;color:#fff;font:800 11px/1.2 system-ui,sans-serif;letter-spacing:.04em;border-radius:5px;padding:6px 8px;white-space:nowrap;vertical-align:middle;margin-left:8px}@media(max-width:420px){.dev-domain-badge{font-size:9px;padding:5px 6px;margin-left:4px}}</style></head><body>
+<header><div class="brand">bonch<span>.fyi</span> / trains <span class="dev-domain-badge" aria-label="Development test site">TEST · test.bonch.fyi</span></div><div class="auth-controls"><span id="auth-error" class="auth-error" role="status"></span><button id="sign-in-button" class="auth-button" disabled>Sign in</button><div id="signed-in-user" class="auth-user"><span id="signed-in-name" class="auth-user-name"></span><span id="clerk-user-button"></span></div></div></header>
 <main><p class="label">AMTRAK EXPLORATION</p><h1>Train Tracker 🚆</h1><p class="lede">A personal map of the rails traveled — and the miles still ahead.</p>
 <div class="cards"><div class="card"><div class="label">Unique miles ridden</div><div class="value">9,221.86</div><div class="sub">of 21,315.32 network miles</div></div>
 <div class="card"><div class="label">Network explored</div><div class="value">43.3%</div><div class="sub">Unique physical track</div></div>
