@@ -1,3 +1,4 @@
+function formatEastern(timestamp){const d=new Date(timestamp);if(Number.isNaN(d.getTime()))return timestamp;const date=new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);const clock=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'numeric',minute:'2-digit',hour12:true}).format(d).replace(/:(\d\d)\s?(AM|PM)/,(_,m,p)=>':'+m+(p==='AM'?'a':'p'));return date+' '+clock+' ET';}
 (async()=>{try{
  const base='d8173a48cd35cd99d483de91787e04014cf498b8';
  const response=await fetch('https://api.github.com/repos/willandbeyond/bonch-test/compare/'+base+'...main',{headers:{Accept:'application/vnd.github+json'}});
@@ -10,7 +11,7 @@
  const timestamp=latest.commit?.committer?.date;
  if(!timestamp)return;
  document.querySelectorAll('.version-number').forEach(el=>el.textContent='V'+version);
- document.querySelectorAll('time.build-time').forEach(el=>{el.dateTime=timestamp;el.textContent=timestamp;});
+ document.querySelectorAll('time.build-time').forEach(el=>{el.dateTime=timestamp;el.textContent=formatEastern(timestamp);});
  document.querySelectorAll('.version-history-current').forEach(el=>el.textContent='v'+version);
  document.querySelectorAll('.version-footer-current').forEach(el=>el.textContent='Version '+version);
  document.querySelectorAll('time.version-build-time').forEach(el=>{el.dateTime=timestamp;el.textContent=new Date(timestamp).toLocaleString('en-US',{timeZone:'America/New_York',year:'numeric',month:'short',day:'numeric',hour:'numeric',minute:'2-digit',timeZoneName:'short'});});
