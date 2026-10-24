@@ -25,7 +25,7 @@ async function authenticate(request,env){
 }
 async function handle(request,env){
  const url=new URL(request.url);
- if(!url.pathname.startsWith('/api/'))return env.ASSETS.fetch(request);
+ if(!url.pathname.startsWith('/api/'))return json({error:'API endpoint only'},404);
  if(request.method==='OPTIONS')return new Response(null,{status:204,headers:{'Access-Control-Allow-Methods':'GET, POST, DELETE, OPTIONS','Access-Control-Allow-Headers':'Authorization, Content-Type','Access-Control-Max-Age':'600'}});
  if(!['GET','POST','DELETE'].includes(request.method))return json({error:'Method not allowed'},405);
  if(request.method==='POST'&&!['/api/admin/notes/import'].includes(url.pathname)&&!/^\/api\/admin\/notes\/(?:0|[1-9][0-9]{0,3})$/.test(url.pathname))return json({error:'Method not allowed'},405);
