@@ -16,8 +16,20 @@ section{margin-top:26px}h2{font-size:1.3rem;letter-spacing:-.025em;margin:0 0 12
 .tablewrap{overflow-x:visible}table{width:100%;border-collapse:collapse;table-layout:fixed}th{text-align:left;color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.06em}td,th{padding:10px 7px;border-bottom:1px solid var(--line);font-size:clamp(.68rem,2.5vw,.9rem);overflow-wrap:anywhere}td:nth-child(2){font-weight:650}th:first-child{width:27%}th:nth-child(2){width:40%}th:nth-child(3){width:33%}tr:last-child td{border-bottom:0}
 .site-footer{max-width:1120px;margin:20px auto 0;padding:18px 20px 30px;border-top:1px solid #dce5e8;color:#667681;font-size:.7rem;text-align:center}.site-footer .version-number{font-weight:650} small.note{display:block;color:var(--muted);margin-top:12px}.empty{padding:24px;text-align:center;color:var(--muted)}
 @media(max-width:760px){.cards{grid-template-columns:repeat(2,1fr)}.split{grid-template-columns:1fr}main{padding:24px 14px 70px}.card,.panel{padding:16px}}
-</style></head><body>
-<header><div class="brand">bonch<span>.fyi</span> / trains</div><div class="badge">Development preview · Read-only</div></header>
+</style><script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_ZmFuY3ktdGVycmllci03NDMwLmNsZXJrLmFjY291bnRzLmRldiQ" src="https://fancy-terrier-7430.clerk.accounts.dev/npm/@clerk/clerk-js@5/dist/clerk.browser.js"></script>
+<style>.auth-controls{display:flex;align-items:center;gap:10px;justify-content:flex-end}.auth-button{background:#126e73;color:#fff;border:0;border-radius:9px;padding:9px 13px;font:600 .85rem system-ui;cursor:pointer}.auth-button[disabled]{opacity:.6;cursor:wait}.auth-user{display:none;align-items:center;gap:8px}.auth-user-name{font-size:.78rem;color:#667681;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.auth-error{font-size:.72rem;color:#9b342e;display:none}</style>
+<script>
+window.addEventListener('load',async()=>{
+const sign=document.getElementById('sign-in-button'),user=document.getElementById('signed-in-user'),name=document.getElementById('signed-in-name'),error=document.getElementById('auth-error');
+if(!sign||!user)return;
+let clerk=window.Clerk;
+if(!clerk){error.textContent='Sign-in temporarily unavailable';error.style.display='inline';sign.disabled=true;return}
+try{await clerk.load();function sync(){if(clerk.user){sign.hidden=true;user.style.display='flex';name.textContent=clerk.user.firstName||clerk.user.primaryEmailAddress?.emailAddress||'Account';const slot=document.getElementById('clerk-user-button');slot.replaceChildren();clerk.mountUserButton(slot)}else{sign.hidden=false;user.style.display='none';const slot=document.getElementById('clerk-user-button');slot.replaceChildren()}}
+sign.disabled=false;sign.addEventListener('click',()=>clerk.openSignIn());sync();clerk.addListener(sync)}
+catch(e){console.error('Clerk initialization failed',e);error.textContent='Sign-in temporarily unavailable';error.style.display='inline';sign.disabled=true}
+});
+</script></head><body>
+<header><div class="brand">bonch<span>.fyi</span> / trains</div><div class="auth-controls"><span id="auth-error" class="auth-error" role="status"></span><button id="sign-in-button" class="auth-button" disabled>Sign in</button><div id="signed-in-user" class="auth-user"><span id="signed-in-name" class="auth-user-name"></span><span id="clerk-user-button"></span></div></div></header>
 <main><p class="label">AMTRAK EXPLORATION</p><h1>Train Tracker 🚆</h1><p class="lede">A personal map of the rails traveled — and the miles still ahead.</p>
 <div class="cards"><div class="card"><div class="label">Unique miles ridden</div><div class="value">9,221.86</div><div class="sub">of 21,315.32 network miles</div></div>
 <div class="card"><div class="label">Network explored</div><div class="value">43.3%</div><div class="sub">Unique physical track</div></div>
