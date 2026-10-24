@@ -3,6 +3,11 @@ main = "src/worker.js"
 compatibility_date = "2026-10-24"
 account_id = "b02028374331cfa6bda334ffaf79b1cf"
 
+# Route only test-domain API calls to this Worker; Pages continues to serve the static site.
+[[routes]]
+pattern = "test.bonch.fyi/api/*"
+zone_name = "bonch.fyi"
+
 [assets]
 directory = "./dist"
 binding = "ASSETS"
