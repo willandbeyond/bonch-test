@@ -1,25 +1,38 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>bonch.fyi — Coming Soon</title>
-  <style>
-    html, body {margin:0;min-height:100%;background:white}
-    body {min-height:100vh;display:grid;place-items:center;font-family:Arial,Helvetica,sans-serif;color:#333}
-    main {width:min(92vw,650px);text-align:center}
-    img {display:block;width:100%;height:auto}
-    p {margin:0 0 2rem;font-size:clamp(1rem,3.4vw,1.4rem);letter-spacing:.025em}
-  </style>
-</head>
-<body>
-  <main>
-    <img id="train" src="train-6.png" alt="Minimalist grayscale train illustration">
-    <p>Coming to a station near you soon.</p>
-  </main>
-  <script>
-    const number = Math.floor(Math.random() * 6) + 1;
-    document.getElementById('train').src = `train-${number}.png`;
-  </script>
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Train Tracker · bonch.fyi</title>
+<style>
+:root{color-scheme:light;--ink:#18232b;--muted:#667681;--line:#dce5e8;--accent:#126e73;--bg:#f4f7f7}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,sans-serif}
+header{background:#fff;border-bottom:1px solid var(--line);padding:16px max(20px,calc((100vw - 1080px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-weight:800;letter-spacing:-.03em;font-size:1.2rem}.brand span{color:var(--accent)}.badge{font-size:.76rem;color:var(--accent);background:#e4f3f0;padding:5px 9px;border-radius:30px}
+main{max-width:1120px;margin:auto;padding:30px 20px 80px}h1{font-size:clamp(2rem,5vw,3.5rem);letter-spacing:-.05em;line-height:1.1;margin:10px 0}.lede{color:var(--muted);margin:0 0 28px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card,.panel{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 2px 8px #20304008}
+.label{color:var(--muted);font-size:.82rem}.value{font-size:clamp(1.4rem,3vw,2rem);font-weight:750;letter-spacing:-.04em;margin:6px 0}.sub{font-size:.8rem;color:var(--muted)}
+.progress{height:12px;border-radius:30px;background:#e2eaea;overflow:hidden;margin:18px 0 8px}.progress>div{height:100%;background:var(--accent);width:43.27%;border-radius:30px}
+section{margin-top:26px}h2{font-size:1.3rem;letter-spacing:-.025em;margin:0 0 12px}.split{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}.stat{border-bottom:1px solid var(--line);padding-bottom:8px}.stat strong{display:block;font-size:1.25rem}
+.controls{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0 16px}input,select{border:1px solid #c9d7dc;border-radius:10px;padding:12px;font:inherit;background:#fff;min-width:0}input{flex:1;min-width:170px}select{max-width:100%}
+.tablewrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:640px}th{text-align:left;color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.06em}td,th{padding:12px;border-bottom:1px solid var(--line)}td:nth-child(4){font-weight:650}tr:last-child td{border-bottom:0}
+small.note{display:block;color:var(--muted);margin-top:12px}.empty{padding:24px;text-align:center;color:var(--muted)}
+@media(max-width:760px){.cards{grid-template-columns:repeat(2,1fr)}.split{grid-template-columns:1fr}main{padding:24px 14px 70px}.card,.panel{padding:16px}}
+</style></head><body>
+<header><div class="brand">bonch<span>.fyi</span> / trains</div><div class="badge">Development preview · Read-only</div></header>
+<main><p class="label">AMTRAK EXPLORATION</p><h1>Train Tracker 🚆</h1><p class="lede">A personal map of the rails traveled — and the miles still ahead.</p>
+<div class="cards"><div class="card"><div class="label">Unique miles ridden</div><div class="value">9,221.86</div><div class="sub">of 21,315.32 network miles</div></div>
+<div class="card"><div class="label">Network explored</div><div class="value">43.3%</div><div class="sub">Unique physical track</div></div>
+<div class="card"><div class="label">Train journeys</div><div class="value">44</div><div class="sub">Trips recorded</div></div>
+<div class="card"><div class="label">Total miles traveled</div><div class="value">14,697.77</div><div class="sub">Including repeat journeys</div></div></div>
+<section class="split"><div class="panel"><h2>System completion</h2><div class="label">9,221.86 / 21,315.32 miles</div><div class="progress" role="progressbar" aria-valuenow="43.27" aria-valuemin="0" aria-valuemax="100" aria-label="Amtrak network completion"><div></div></div><p class="sub">43.3% ridden · 56.7% yet to explore</p><small class="note">Shared track is counted only once. Values are a snapshot from the uploaded workbook.</small></div>
+<div class="panel"><h2>More milestones</h2><div class="stats"><div class="stat"><span class="label">Segments completed</span><strong>232 / 552</strong></div><div class="stat"><span class="label">Services ridden</span><strong>14 / 44</strong></div><div class="stat"><span class="label">Time aboard</span><strong>286h 17m</strong></div><div class="stat"><span class="label">Most ridden</span><strong>NYP ↔ WAS</strong><span class="sub">18 rides</span></div></div></div></section>
+<section class="panel"><h2>Trip history <span id="count" class="sub"></span></h2><div class="controls"><input id="search" type="search" placeholder="Search service, station, date…" aria-label="Search trips"><select id="service" aria-label="Filter by service"><option value="">All services</option></select><select id="order" aria-label="Sort trips"><option value="new">Newest first</option><option value="old">Oldest first</option></select></div>
+<div class="tablewrap"><table><thead><tr><th>Date</th><th>Service</th><th>From → To</th><th>Class</th><th>Miles</th></tr></thead><tbody id="triprows"></tbody></table></div><small class="note">Read-only first release. Trip notes, route map, and editing will follow in subsequent versions.</small></section>
+</main><script>
+const raw="2004-01-01|Amtrak Cascades|PDX|BEL|Coach|274.98\n2004-01-02|Amtrak Cascades|BEL|PDX|Coach|274.98\n2007-03-15|Northeast Regional|NYP|WAS|Coach|224.45\n2007-03-17|Northeast Regional|WAS|NYP|Coach|224.45\n2010-06-07|Northeast Regional|WAS|PHL|Coach|134.14\n2010-06-10|Northeast Regional|PHL|WAS|Coach|134.14\n2011-06-28|Northeast Regional|WAS|NYP|Coach|224.45\n2011-06-29|Northeast Regional|NYP|WAS|Coach|224.45\n2013-01-11|Capitol Limited|WAS|CLE|Coach|435.65\n2013-01-15|Capitol Limited|CLE|CHI|Coach|340.07\n2013-01-17|Hiawatha|CHI|MKE|Coach|85.69\n2013-01-19|Hiawatha|MKE|CHI|Coach|85.69\n2013-01-19|Texas Eagle|CHI|STL|Coach|281.01\n2013-01-21|Missouri River Runner|STL|KCY|Coach|278.21\n2013-01-22|Southwest Chief|KCY|ABQ|Coach|899.58\n2013-01-28|Southwest Chief|ABQ|LAX|Coach|894.31\n2013-01-31|Coast Starlight|LAX|PDX|Coach|1191.55\n2015-08-28|Amtrak Cascades|PDX|SEA|Coach|180.44\n2015-08-29|Coast Starlight|TAC|PDX|Coach|140.94\n2024-06-09|Acela|NYP|WAS|Business|224.45\n2024-11-08|Northeast Regional|WAS|NYP|Coach|224.45\n2024-11-11|Northeast Regional|NYP|WAS|Coach|224.45\n2025-05-23|Northeast Regional|WAS|NYP|Coach|224.45\n2025-05-26|Vermonter|NYP|WAS|Coach|224.45\n2025-07-03|Northeast Regional|WAS|PHL|Coach|134.14\n2025-07-06|Vermonter|PHL|WAS|Coach|134.14\n2025-12-20|Acela|WAS|NYP|Business|224.45\n2025-12-23|Empire Service|NYP|ALB|Coach|141.01\n2025-12-28|Empire Service|ALB|NYP|Coach|141.01\n2025-12-28|Northeast Regional|NYP|WAS|Coach|224.45\n2026-02-15|Floridian|ORL|WAS|Coach|940.18\n2026-02-21|Northeast Regional|WAS|NYP|Coach|224.45\n2026-04-03|Crescent|WAS|BHM|Coach|797.05\n2026-04-05|Crescent|BHM|NOL|Coach|352.92\n2026-04-06|Sunset Limited|NOL|LAX|Roomette|1991.18\n2026-04-09|Pacific Surfliner|LAX|SAN|Coach|126.38\n2026-05-02|Northeast Regional|WAS|NYP|Coach|224.45\n2026-05-03|Northeast Regional|NYP|WAS|Coach|224.45\n2026-05-31|Northeast Regional|WAS|PHL|Coach|134.14\n2026-05-31|Acela|PHL|WAS|Business|134.14\n2026-08-14|Acela|WAS|NYP|Business|224.45\n2026-08-15|Northeast Regional|NYP|WAS|Coach|224.45\n2026-09-19|Acela|WAS|NYP|Business|224.45\n2026-09-20|Northeast Regional|NYP|WAS|Coach|224.45";
+const trips=raw.trim().split('\n').map(s=>{const [date,service,from,to,seat,miles]=s.split('|');return {date,service,from,to,seat,miles:Number(miles)}});
+const q=document.getElementById('search'),svc=document.getElementById('service'),ord=document.getElementById('order'),tbody=document.getElementById('triprows');
+[...new Set(trips.map(t=>t.service))].sort().forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;svc.appendChild(o)});
+function render(){const term=q.value.toLowerCase().trim();const data=trips.filter(t=>(!svc.value||t.service===svc.value)&&(!term||[t.date,t.service,t.from,t.to,t.seat].join(' ').toLowerCase().includes(term))).sort((a,b)=>ord.value==='new'?b.date.localeCompare(a.date):a.date.localeCompare(b.date));
+tbody.replaceChildren();for(const t of data){const tr=document.createElement('tr');for(const val of [t.date,t.service,t.from+' → '+t.to,t.seat,t.miles.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})]){const td=document.createElement('td');td.textContent=val;tr.appendChild(td)}tbody.appendChild(tr)}document.getElementById('count').textContent='('+data.length+' of '+trips.length+')';if(!data.length){const tr=document.createElement('tr'),td=document.createElement('td');td.colSpan=5;td.className='empty';td.textContent='No matching trips';tr.appendChild(td);tbody.appendChild(tr)}}
+[q,svc,ord].forEach(el=>el.addEventListener(el===q?'input':'change',render));render();
+</script></body></html>
