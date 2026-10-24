@@ -1,4 +1,4 @@
-name: Deploy test site to Cloudflare Pages
+name: Deploy development site to Cloudflare Workers
 
 on:
   workflow_dispatch:
@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: cloudflare-test-deploy
+  group: cloudflare-dev-deploy
   cancel-in-progress: true
 
 jobs:
@@ -18,9 +18,15 @@ jobs:
     steps:
       - name: Check out site
         uses: actions/checkout@v4
-      - name: Deploy to Cloudflare Pages
+
+      - name: Prepare static assets
+        run: |
+          mkdir -p dist
+          cp index.html train-*.png dist/
+
+      - name: Deploy to bonch-dev Worker
         uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy . --project-name=bonch-test --branch=main
+          apiToken: ${{ secrets.CLOUDFLARE_CI_CD_TOKEN }}
+          accountId: b02028374331cfa6bda334ffaf79b1cf
+          command: deploy --name bonch-dev --assets ./dist
