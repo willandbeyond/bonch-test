@@ -22,7 +22,7 @@ jobs:
       - name: Prepare static assets
         run: |
           mkdir -p dist
-          cp index.html services.html versions.html import-notes.html release-metadata.js train-*.png dist/
+          cp index.html map.html services.html versions.html import-notes.html release-metadata.js train-*.png dist/
 
       - name: Deploy to bonch-dev Worker
         uses: cloudflare/wrangler-action@v3
