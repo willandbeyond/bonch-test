@@ -24,6 +24,13 @@ jobs:
           mkdir -p dist
           cp index.html services.html versions.html train-*.png dist/
 
+      - name: Initialize D1 schema
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_CI_CD_TOKEN }}
+          accountId: b02028374331cfa6bda334ffaf79b1cf
+          command: d1 execute bonch-dev-db --remote --file=db/schema.sql --yes
+
       - name: Deploy to bonch-dev Worker
         uses: cloudflare/wrangler-action@v3
         with:
