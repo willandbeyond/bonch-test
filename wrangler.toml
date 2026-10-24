@@ -1,0 +1,17 @@
+name = "bonch-dev"
+main = "src/worker.js"
+compatibility_date = "2026-10-24"
+account_id = "b02028374331cfa6bda334ffaf79b1cf"
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "bonch-dev-db"
+database_id = "e625a942-7f7d-41af-b3c1-e7cc758a503e"
+
+[vars]
+CLERK_ISSUER = "https://fancy-terrier-7430.clerk.accounts.dev"
+ADMIN_CLERK_USER_ID = "user_3L8EodpxkmAy8NQhhzVviNqcXJt"
