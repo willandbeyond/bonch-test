@@ -1,0 +1,37 @@
+name: Diagnose development API routing
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/diagnose-dev-routing.yml']
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check public endpoints and deployment token without exposing secrets
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_CI_CD_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import urllib.request, urllib.error, json, os
+          for label,url in [
+              ('test website','https://test.bonch.fyi/'),
+              ('test API','https://test.bonch.fyi/api/health'),
+              ('Worker API','https://bonch-dev.will-boncher.workers.dev/api/health')]:
+              try:
+                  with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'bonch-dev-diagnostic'}),timeout=15) as r:
+                      data=r.read(400)
+                      print(label,'HTTP',r.status,'content-type',r.headers.get('Content-Type'),'health-ok',b'"ok":true' in data,'final-host',r.url.split('/')[2])
+              except urllib.error.HTTPError as e: print(label,'HTTP',e.code,'content-type',e.headers.get('Content-Type'))
+              except Exception as e: print(label,'network-error',type(e).__name__)
+          token=os.environ.get('CF_TOKEN','')
+          if not token: print('deployment token missing');raise SystemExit(0)
+          req=urllib.request.Request('https://api.cloudflare.com/client/v4/user/tokens/verify',headers={'Authorization':'Bearer '+token})
+          try:
+              with urllib.request.urlopen(req,timeout=15) as r:
+                  body=json.load(r)
+                  print('GitHub deployment token valid:',body.get('success'),'status:',body.get('result',{}).get('status'))
+          except urllib.error.HTTPError as e: print('GitHub deployment token verify HTTP',e.code)
+          except Exception as e: print('GitHub deployment token verify network-error',type(e).__name__)
+          PY
