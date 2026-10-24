@@ -27,14 +27,33 @@ export default {async fetch(request,env){
  const url=new URL(request.url);
  if(!url.pathname.startsWith('/api/'))return env.ASSETS.fetch(request);
  if(request.method==='OPTIONS')return new Response(null,{status:405,headers:{Allow:'GET, POST'}});
- if(!['GET','POST'].includes(request.method))return json({error:'Method not allowed'},405);
- if(request.method==='POST'&&url.pathname!=='/api/admin/notes/import')return json({error:'Method not allowed'},405);
+ if(!['GET','POST','DELETE'].includes(request.method))return json({error:'Method not allowed'},405);
+ if(request.method==='POST'&&!['/api/admin/notes/import'].includes(url.pathname)&&!/^\/api\/admin\/notes\/(?:0|[1-9][0-9]{0,3})$/.test(url.pathname))return json({error:'Method not allowed'},405);
+ if(request.method==='DELETE'&&!/^\/api\/admin\/notes\/(?:0|[1-9][0-9]{0,3})$/.test(url.pathname))return json({error:'Method not allowed'},405);
  if(request.method==='GET'&&url.pathname==='/api/admin/notes/import')return json({error:'Method not allowed'},405);
  if(request.method==='GET'&&url.pathname==='/api/health')return json({ok:true,service:'bonch-dev',databaseConfigured:Boolean(env.DB)});
  let identity;try{identity=await authenticate(request,env)}catch(e){console.error('Token validation failed',e);return json({error:'Authentication unavailable'},503)}
  if(!identity)return json({error:'Sign in required'},401);
  if(identity.sub!==env.ADMIN_CLERK_USER_ID)return json({error:'Administrator access required'},403);
- if(url.pathname==='/api/admin/me')return json({admin:true,userId:identity.sub});
+ if(request.method==='GET'&&url.pathname==='/api/admin/me')return json({admin:true,userId:identity.sub});
+ const match=url.pathname.match(/^\/api\/admin\/notes\/(0|[1-9][0-9]{0,3})$/);
+ if(match&&(request.method==='POST'||request.method==='DELETE')){
+  const key=match[1];
+  if(Number(key)>43)return json({error:'Unknown trip'},404);
+  try{
+   if(request.method==='DELETE'){
+    const result=await env.DB.prepare('DELETE FROM trip_notes WHERE trip_key=?').bind(key).run();
+    return json({deleted:true,changed:result.meta?.changes||0});
+   }
+   if(!(request.headers.get('content-type')||'').toLowerCase().startsWith('application/json'))return json({error:'JSON required'},415);
+   const raw=await request.text();if(raw.length>10000)return json({error:'Note too long'},413);
+   let data;try{data=JSON.parse(raw)}catch{return json({error:'Invalid JSON'},400)}
+   if(typeof data.note!=='string'||data.note.length>5000||!data.note.trim())return json({error:'Note must contain 1–5000 characters'},400);
+   await env.DB.prepare("INSERT INTO trip_notes(trip_key,note,updated_at) VALUES(?,?,strftime('%Y-%m-%dT%H:%M:%fZ','now')) ON CONFLICT(trip_key) DO UPDATE SET note=excluded.note,updated_at=excluded.updated_at").bind(key,data.note).run();
+   return json({saved:true,trip_key:key});
+  }catch(e){console.error('Note edit failed',e);return json({error:'Database operation failed'},503)}
+ }
+
  if(request.method==='POST'&&url.pathname==='/api/admin/notes/import'){
   const type=request.headers.get('content-type')||'';
   if(!type.toLowerCase().startsWith('application/json'))return json({error:'JSON required'},415);
