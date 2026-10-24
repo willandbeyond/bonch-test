@@ -15,6 +15,7 @@ select,input{font:inherit;padding:10px;border:1px solid #cad8dd;border-radius:8p
 .dot{display:inline-block;width:12px;height:12px;border-radius:50%;background:#126e73;margin-right:4px}
 #summary{font-size:.85rem;color:var(--muted);padding:0 14px 12px}.notice{font-size:.83rem;color:#52616a;margin:14px 4px}
 @media(max-width:600px){.wrap{padding:16px 10px 45px}header{padding:12px 14px;font-size:.84rem}.controls{padding:12px;gap:10px}#map{height:58vh;min-height:430px}.panel{border-radius:12px}#summary{line-height:1.4}}
+ .site-footer{border-top:1px solid var(--line);padding:14px 8px 24px;text-align:center;color:var(--muted);font-size:clamp(9px,2.15vw,11px);white-space:nowrap}.version-number{font-weight:650}.version-link{color:var(--accent)}
 </style></head><body>
 <header><span class="brand">bonch.fyi / trains / map</span><a href="index.html">← Train Tracker</a></header>
 <main class="wrap"><h1>Rail journeys map</h1><p class="lede">Explore recorded Amtrak trips by service and year.</p>
@@ -22,7 +23,8 @@ select,input{font:inherit;padding:10px;border:1px solid #cad8dd;border-radius:8p
 <div id="summary" role="status"></div><div id="map" aria-label="Interactive map of recorded train journeys"></div>
 <div class="legend"><span><i class="dot"></i> Station visited</span><span>— Straight-line connection between recorded endpoints</span></div></div>
 <p class="notice"><strong>Map preview:</strong> Connections are schematic straight lines between stations, <em>not</em> actual railroad tracks. Repeated journeys overlap. This map currently includes recorded trips only, not the complete Amtrak network or untraveled segments. Detailed route geometry and segment-level completion are a future phase.</p>
-</main>
+</main><footer class="site-footer">Updated: <time class="build-time" datetime="2026-10-24T07:46:00Z">2026-10-24 3:46a ET</time> · Last data: not tracked yet · <span class="version-number">V0.5.0</span><a class="version-link" href="versions.html" title="Version history"> ↗</a></footer>
+<script defer src="release-metadata.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
 const stationCoords={"PDX":[45.529,-122.677],"BEL":[48.751,-122.479],"NYP":[40.7506,-73.9935],"WAS":[38.897,-77.006],"PHL":[39.9556,-75.182],"CLE":[41.505,-81.696],"CHI":[41.8786,-87.64],"MKE":[43.034,-87.917],"STL":[38.624,-90.204],"KCY":[39.084,-94.585],"ABQ":[35.083,-106.647],"LAX":[34.056,-118.236],"SEA":[47.598,-122.33],"TAC":[47.242,-122.42],"ALB":[42.642,-73.741],"ORL":[28.525,-81.382],"BHM":[33.513,-86.807],"NOL":[29.947,-90.078],"SAN":[32.716,-117.17]};
