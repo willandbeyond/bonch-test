@@ -52,23 +52,11 @@ function routeGeometry(a,b){
 const raw="2004-01-01|Amtrak Cascades|PDX|BEL|Coach|274.98\n2004-01-02|Amtrak Cascades|BEL|PDX|Coach|274.98\n2007-03-15|Northeast Regional|NYP|WAS|Coach|224.45\n2007-03-17|Northeast Regional|WAS|NYP|Coach|224.45\n2010-06-07|Northeast Regional|WAS|PHL|Coach|134.14\n2010-06-10|Northeast Regional|PHL|WAS|Coach|134.14\n2011-06-28|Northeast Regional|WAS|NYP|Coach|224.45\n2011-06-29|Northeast Regional|NYP|WAS|Coach|224.45\n2013-01-11|Capitol Limited|WAS|CLE|Coach|435.65\n2013-01-15|Capitol Limited|CLE|CHI|Coach|340.07\n2013-01-17|Hiawatha|CHI|MKE|Coach|85.69\n2013-01-19|Hiawatha|MKE|CHI|Coach|85.69\n2013-01-19|Texas Eagle|CHI|STL|Coach|281.01\n2013-01-21|Missouri River Runner|STL|KCY|Coach|278.21\n2013-01-22|Southwest Chief|KCY|ABQ|Coach|899.58\n2013-01-28|Southwest Chief|ABQ|LAX|Coach|894.31\n2013-01-31|Coast Starlight|LAX|PDX|Coach|1191.55\n2015-08-28|Amtrak Cascades|PDX|SEA|Coach|180.44\n2015-08-29|Coast Starlight|TAC|PDX|Coach|140.94\n2024-06-09|Acela|NYP|WAS|Business|224.45\n2024-11-08|Northeast Regional|WAS|NYP|Coach|224.45\n2024-11-11|Northeast Regional|NYP|WAS|Coach|224.45\n2025-05-23|Northeast Regional|WAS|NYP|Coach|224.45\n2025-05-26|Vermonter|NYP|WAS|Coach|224.45\n2025-07-03|Northeast Regional|WAS|PHL|Coach|134.14\n2025-07-06|Vermonter|PHL|WAS|Coach|134.14\n2025-12-20|Acela|WAS|NYP|Business|224.45\n2025-12-23|Empire Service|NYP|ALB|Coach|141.01\n2025-12-28|Empire Service|ALB|NYP|Coach|141.01\n2025-12-28|Northeast Regional|NYP|WAS|Coach|224.45\n2026-02-15|Floridian|ORL|WAS|Coach|940.18\n2026-02-21|Northeast Regional|WAS|NYP|Coach|224.45\n2026-04-03|Crescent|WAS|BHM|Coach|797.05\n2026-04-05|Crescent|BHM|NOL|Coach|352.92\n2026-04-06|Sunset Limited|NOL|LAX|Roomette|1991.18\n2026-04-09|Pacific Surfliner|LAX|SAN|Coach|126.38\n2026-05-02|Northeast Regional|WAS|NYP|Coach|224.45\n2026-05-03|Northeast Regional|NYP|WAS|Coach|224.45\n2026-05-31|Northeast Regional|WAS|PHL|Coach|134.14\n2026-05-31|Acela|PHL|WAS|Business|134.14\n2026-08-14|Acela|WAS|NYP|Business|224.45\n2026-08-15|Northeast Regional|NYP|WAS|Coach|224.45\n2026-09-19|Acela|WAS|NYP|Business|224.45\n2026-09-20|Northeast Regional|NYP|WAS|Coach|224.45";
 const trips=raw.trim().split('\n').map((s,i)=>{const [date,service,from,to,seat,miles]=s.split('|');return {id:i,date,service,from,to,seat,miles:Number(miles)}});
 const map=L.map('map',{scrollWheelZoom:false}).setView([39,-98],4);
-// Stadia Maps domain authentication: allow test.bonch.fyi in the Stadia dashboard.
-// If tiles cannot load (for example, domain auth is pending), use OSM as fallback.
-const stadia=L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png',{
- attribution:'&copy; Stadia Maps &copy; OpenMapTiles &copy; OpenStreetMap contributors',
+// Use the public OpenStreetMap basemap while Stadia tile authorization is unresolved.
+const stadia=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
+ attribution:'&copy; OpenStreetMap contributors',
  maxZoom:19
 }).addTo(map);
-let fallbackStarted=false;
-stadia.on('tileerror',()=>{
- if(fallbackStarted)return;
- fallbackStarted=true;
- map.removeLayer(stadia);
- L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{
-  attribution:'&copy; OpenStreetMap contributors',maxZoom:19
- }).addTo(map);
- const summary=document.getElementById('summary');
- summary.textContent='Stadia tiles unavailable; displaying OpenStreetMap basemap instead. '+summary.textContent;
-});
 const group=L.featureGroup().addTo(map),svc=document.getElementById('service'),year=document.getElementById('year'),search=document.getElementById('search');
 for(const name of [...new Set(trips.map(t=>t.service))].sort()){const o=document.createElement('option');o.value=name;o.textContent=name;svc.append(o)}
 for(const y of [...new Set(trips.map(t=>t.date.slice(0,4)))].sort().reverse()){const o=document.createElement('option');o.value=y;o.textContent=y;year.append(o)}
