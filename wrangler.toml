@@ -8,10 +8,6 @@ account_id = "b02028374331cfa6bda334ffaf79b1cf"
 pattern = "test.bonch.fyi/api/*"
 zone_name = "bonch.fyi"
 
-[assets]
-directory = "./dist"
-binding = "ASSETS"
-
 [[d1_databases]]
 binding = "DB"
 database_name = "bonch-dev-db"
