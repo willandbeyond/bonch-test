@@ -19,11 +19,11 @@ const line=L.polyline(pts,{color:s.ridden?'#d7263d':'#aeb8bd',weight:s.ridden?3.
 line.bindPopup('<strong>'+s.id+'</strong><br>'+Number(s.miles).toFixed(2)+' miles<br>'+(s.ridden?'Ridden':'Not ridden')+'<br>'+s.services.join(', '));
 line.addTo(s.ridden?red:gray);for(const p of pts)bounds.extend(p);plotted++;
 }
-if(bounds.isValid())map.fitBounds(bounds,{padding:[12,12],maxZoom:6});
+if(bounds.isValid())map.fitBounds(bounds,{padding:[18,18],maxZoom:6});
 document.getElementById('miles').textContent=stats.riddenMiles.toLocaleString('en-US')+' / '+stats.networkMiles.toLocaleString('en-US')+' miles ('+(stats.riddenMiles/stats.networkMiles*100).toFixed(1)+'%)';
 document.getElementById('segments').textContent=stats.riddenSegments+' / '+stats.totalSegments+' segments · '+d.trips.length+' trips';
 if(invalid)warn(invalid+' segments have invalid or missing geometry.');if(!plotted)warn('No valid track geometry found.');
-L.control({position:'bottomright'}).onAdd=function(){const el=L.DomUtil.create('div','legend');el.innerHTML='<span class="key" style="border-color:#d7263d"></span>Ridden<br><span class="key" style="border-color:#aeb8bd"></span>Unridden';return el}.addTo(map);
-}catch(e){warn('Unable to load railroad data: '+e.message);document.getElementById('miles').textContent='Map unavailable';console.error(e)}
+const legend=L.control({position:'bottomright'});legend.onAdd=function(){const el=L.DomUtil.create('div','legend');el.innerHTML='<span class="key" style="border-color:#d7263d"></span>Ridden<br><span class="key" style="border-color:#aeb8bd"></span>Unridden';return el};legend.addTo(map);
+}catch(e){warn('Map initialization issue: '+e.message);if(document.getElementById('miles').textContent==='Loading track map…')document.getElementById('miles').textContent='Map unavailable';console.error(e)}
 })();
 </script></body></html>
