@@ -28,11 +28,10 @@ jobs:
           if len(notes)!=44 or not all(isinstance(n,str) and n.strip() for n in notes):
               raise SystemExit('Unexpected notes data: aborting')
           con=sqlite3.connect(':memory:')
-          sql=["BEGIN TRANSACTION;"]
+          sql=[]
           for i,note in enumerate(notes):
               escaped=note.replace("'","''")
               sql.append("INSERT INTO trip_notes (trip_key,note,updated_at) VALUES ('"+str(i)+"','"+escaped+"',strftime('%Y-%m-%dT%H:%M:%fZ','now')) ON CONFLICT(trip_key) DO NOTHING;")
-          sql.append("COMMIT;")
           pathlib.Path('/tmp/private-note-import.sql').write_text('\n'.join(sql))
           print('Prepared 44 private notes for authenticated development import; note contents omitted.')
           PY
