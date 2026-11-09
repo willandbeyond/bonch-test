@@ -37,6 +37,8 @@ for feature in data["features"]:
         east=max(c[0] for c in chunk)+pad
         south=min(c[1] for c in chunk)-pad
         north=max(c[1] for c in chunk)+pad
+        # OSM API rejects bounding boxes whose area exceeds 0.25 square degrees
+        # and some high-density urban blocks exceed its node limit.
         url=f"https://api.openstreetmap.org/api/0.6/map?bbox={west},{south},{east},{north}"
         try:
             req=urllib.request.Request(url,headers={"User-Agent":"bonch-fyi-route-classifier/1.0 (route visualization)"})
