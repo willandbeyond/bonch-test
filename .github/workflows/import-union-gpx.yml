@@ -23,7 +23,7 @@ jobs:
           with zipfile.ZipFile("routes.zip") as archive:
               for member in archive.infolist():
                   name = pathlib.PurePosixPath(member.filename).name
-                  if not re.fullmatch(r"Running the Union #\\d+ .+\\.gpx", name, re.I):
+                  if not re.fullmatch(r"Running the Union #\d+ .+\.gpx", name, re.I):
                       continue
                   (dest / name).write_bytes(archive.read(member))
                   print("Extracted", name)
