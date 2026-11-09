@@ -6,8 +6,16 @@ coords=feature["geometry"]["coordinates"]
 lats=[c[1] for c in coords]; lons=[c[0] for c in coords]
 bbox=(min(lats)-.004,min(lons)-.004,max(lats)+.004,max(lons)+.004)
 query=f'[out:json][timeout:90];way["highway"]["name"~"^Delaware (Avenue|Ave)",i]({bbox[0]},{bbox[1]},{bbox[2]},{bbox[3]});out geom;'
-req=urllib.request.Request("https://overpass.kumi.systems/api/interpreter",data=urllib.parse.urlencode({"data":query}).encode(),headers={"User-Agent":"bonch-fyi-union-route-classifier/1.0"})
-with urllib.request.urlopen(req,timeout=110) as response: osm=json.load(response)
+osm=None
+for endpoint in ("https://overpass.private.coffee/api/interpreter","https://overpass.nchc.org.tw/api/interpreter","https://overpass-api.de/api/interpreter"):
+    try:
+        print("Trying",endpoint,flush=True)
+        req=urllib.request.Request(endpoint,data=urllib.parse.urlencode({"data":query}).encode(),headers={"User-Agent":"bonch-fyi-union-route-classifier/1.0"})
+        with urllib.request.urlopen(req,timeout=45) as response: osm=json.load(response)
+        break
+    except Exception as exc:
+        print("Endpoint failed:",repr(exc),flush=True)
+if osm is None: raise RuntimeError("All Overpass endpoints failed")
 ways=[[(pt["lon"],pt["lat"]) for pt in w["geometry"]] for w in osm["elements"] if w.get("geometry")]
 if not ways: raise ValueError("No Delaware Avenue road geometry returned")
 def distance_m(p,a,b):
