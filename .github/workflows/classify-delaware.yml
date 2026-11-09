@@ -1,0 +1,24 @@
+name: Classify Delaware Avenue GPX
+on:
+  push:
+    paths:
+      - '.github/workflows/classify-delaware.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  classify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Match GPX to OSM Delaware Avenue ways
+        run: python union/classify_delaware.py
+      - name: Publish classified route
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add union/routes.geojson
+          if ! git diff --cached --quiet; then
+            git commit -m 'union: color Delaware Avenue versus connectors'
+            git push
+          fi
