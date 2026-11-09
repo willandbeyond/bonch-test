@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - '.github/workflows/classify-remaining-union.yml'
+      - 'union/classify_remaining.py'
   workflow_dispatch:
 permissions:
   contents: write
