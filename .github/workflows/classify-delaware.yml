@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - '.github/workflows/classify-delaware.yml'
+      - 'union/classify_delaware.py'
   workflow_dispatch:
 permissions:
   contents: write
