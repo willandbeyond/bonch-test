@@ -13,7 +13,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Download shared GPX folder
         run: |
-          curl --fail --location --retry 3 --max-time 180 -o routes.zip 'https://www.dropbox.com/scl/fo/unr1nk9or68t50lu2aaew/AAiB8BznDww4pxOUzNL25xY?rlkey=zy2anl5ks30aw531k4gxqipp8&dl=1'
+          curl --location --retry 2 --max-time 90 -w 'HTTP %{http_code}; bytes %{size_download}; type %{content_type}\n' -o routes.zip 'https://www.dropbox.com/scl/fo/unr1nk9or68t50lu2aaew/AAiB8BznDww4pxOUzNL25xY?rlkey=zy2anl5ks30aw531k4gxqipp8&dl=1'
+          file routes.zip
           unzip -t routes.zip | tail -3
           mkdir downloaded
           unzip -q routes.zip -d downloaded
@@ -26,5 +27,30 @@ jobs:
           git add union/routes.geojson
           if ! git diff --cached --quiet; then
             git commit -m 'union: publish 17 imported GPX route traces'
+            git push
+          fi
+
+      - name: Record import diagnostics
+        if: always()
+        run: |
+          mkdir -p union
+          {
+            echo "Run: ${GITHUB_RUN_ID}"
+            echo "Result: ${{ job.status }}"
+            if test -f routes.zip; then
+              echo "Downloaded bytes: $(wc -c < routes.zip)"
+              echo "File type: $(file -b routes.zip)"
+              echo "ZIP signature: $(head -c 4 routes.zip | od -An -tx1)"
+              echo "ZIP test:"
+              unzip -t routes.zip 2>&1 | tail -8
+            else
+              echo "No routes.zip was downloaded"
+            fi
+          } > union/import-diagnostics.txt
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add union/import-diagnostics.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'union: record GPX import diagnostics'
             git push
           fi
