@@ -24,14 +24,14 @@ for feature in data["features"]:
         continue
     coords = geom["coordinates"]
     name = props["state"]
-    stem = re.sub(r"\\s+(Ave|Avenue|Dr|Drive)\\.?$", "", name, flags=re.I).strip()
+    stem = re.sub(r"\s+(Ave|Avenue|Dr|Drive)\.?$", "", name, flags=re.I).strip()
     # Exact road name, including both Avenue and Drive variants.
-    pattern = re.compile(r"^" + re.escape(stem) + r"\\s+(Avenue|Ave\\.?|Drive|Dr\\.?)(?:\\s|$)", re.I)
+    pattern = re.compile(r"^" + re.escape(stem) + r"\s+(Avenue|Ave\.?|Drive|Dr\.?)(?:\s|$)", re.I)
     ways, seen = [], set()
     failed_chunks = 0
     print(f"CLASSIFY #{n} {name}: {len(coords)} points", flush=True)
-    for i in range(0, len(coords), 10):
-        chunk = coords[max(0,i-1):min(len(coords),i+11)]
+    for i in range(0, len(coords), 20):
+        chunk = coords[max(0,i-1):min(len(coords),i+21)]
         pad = .00045
         west=min(c[0] for c in chunk)-pad
         east=max(c[0] for c in chunk)+pad
@@ -40,8 +40,17 @@ for feature in data["features"]:
         url=f"https://api.openstreetmap.org/api/0.6/map?bbox={west},{south},{east},{north}"
         try:
             req=urllib.request.Request(url,headers={"User-Agent":"bonch-fyi-route-classifier/1.0 (route visualization)"})
-            with urllib.request.urlopen(req,timeout=45) as response:
-                root=ET.parse(response).getroot()
+            for attempt in range(4):
+                try:
+                    with urllib.request.urlopen(req,timeout=45) as response:
+                        root=ET.parse(response).getroot()
+                    break
+                except urllib.error.HTTPError as exc:
+                    if exc.code != 429 or attempt == 3:
+                        raise
+                    delay = 15 * (attempt+1)
+                    print(f"  Rate limited; waiting {delay}s",flush=True)
+                    time.sleep(delay)
             nodes={node.attrib["id"]:(float(node.attrib["lon"]),float(node.attrib["lat"])) for node in root.findall("node")}
             for way in root.findall("way"):
                 wid=way.attrib["id"]
@@ -54,8 +63,8 @@ for feature in data["features"]:
                     seen.add(wid)
         except Exception as exc:
             failed_chunks += 1
-            print(f"  chunk {i//10+1} failed: {exc!r}",flush=True)
-        time.sleep(.35)
+            print(f"  chunk {i//20+1} failed: {exc!r}",flush=True)
+        time.sleep(2.5)
     if not ways or failed_chunks:
         failures.append(f"#{n} {name}: {len(ways)} ways, {failed_chunks} failed chunks")
         print("  SKIPPED: incomplete OSM coverage",flush=True)
