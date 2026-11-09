@@ -30,22 +30,20 @@ for w in root.findall("way"):
         seen.add(wid)
 if not ways:raise ValueError("OSM map API returned no Delaware Avenue road geometry")
 def distance_m(p,a,b):
-k=111320; c=math.cos(math.radians(p[1]))
-x,y=(p[0]-a[0])*k*c,(p[1]-a[1])*k
-dx,dy=(b[0]-a[0])*k*c,(b[1]-a[1])*k
-t=max(0,min(1,(x*dx+y*dy)/(dx*dx+dy*dy))) if dx*dx+dy*dy else 0
-return math.hypot(x-t*dx,y-t*dy)
+    k=111320; c=math.cos(math.radians(p[1]))
+    x,y=(p[0]-a[0])*k*c,(p[1]-a[1])*k
+    dx,dy=(b[0]-a[0])*k*c,(b[1]-a[1])*k
+    t=max(0,min(1,(x*dx+y*dy)/(dx*dx+dy*dy))) if dx*dx+dy*dy else 0
+    return math.hypot(x-t*dx,y-t*dy)
 roads=[(a,b) for way in ways for a,b in zip(way,way[1:])]
 def near(p): return min(distance_m(p,a,b) for a,b in roads)
-# Every original GPX edge is classified using its midpoint; 22m tolerates parallel sidewalks.
 flags=[]
 for a,b in zip(coords,coords[1:]):
-mid=((a[0]+b[0])/2,(a[1]+b[1])/2)
-flags.append(near(mid)<=22)
-# Avoid isolated classifications at junctions.
+    mid=((a[0]+b[0])/2,(a[1]+b[1])/2)
+    flags.append(near(mid)<=22)
 for i in range(1,len(flags)-1):
-if flags[i-1]==flags[i+1]!=flags[i]:flags[i]=flags[i-1]
+    if flags[i-1]==flags[i+1]!=flags[i]:flags[i]=flags[i-1]
 feature["properties"]["namedRoadEdges"]=flags
-feature["properties"]["classificationMethod"]="OSM named-way proximity (22m), midpoint per GPX edge"
+feature["properties"]["classificationMethod"]="OSM primary map API named-way proximity (22m)"
 p.write_text(json.dumps(data,separators=(",",":")))
 print("OSM ways:",len(ways),"named-road edges:",sum(flags),"connector edges:",len(flags)-sum(flags))
