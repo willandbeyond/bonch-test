@@ -1,77 +1,45 @@
 CLASSIFY #2 Pennsylvania Ave: 297 points
+  chunk 4 failed: <HTTPError 400: 'Bad Request'>
   SKIPPED: incomplete OSM coverage
 CLASSIFY #3 New Jersey Ave: 189 points
-  SKIPPED: incomplete OSM coverage
+  DONE: 145 named-road edges, 43 connector edges
 CLASSIFY #4 Georgia Ave: 36 points
-  SKIPPED: incomplete OSM coverage
+  DONE: 35 named-road edges, 0 connector edges
 CLASSIFY #5 Connecticut Ave: 94 points
-  chunk 2 failed: <HTTPError 400: 'Bad Request'>
+  chunk 1 failed: <HTTPError 400: 'Bad Request'>
   SKIPPED: incomplete OSM coverage
 CLASSIFY #6 Massachusetts Ave: 386 points
+  chunk 11 failed: <HTTPError 400: 'Bad Request'>
   SKIPPED: incomplete OSM coverage
 CLASSIFY #7 Maryland Ave: 159 points
-  SKIPPED: incomplete OSM coverage
+  DONE: 82 named-road edges, 76 connector edges
 CLASSIFY #8 South Carolina Ave: 54 points
-  SKIPPED: incomplete OSM coverage
+  DONE: 33 named-road edges, 20 connector edges
 CLASSIFY #9 New Hampshire Ave: 180 points
-  SKIPPED: incomplete OSM coverage
+  DONE: 127 named-road edges, 52 connector edges
 CLASSIFY #10 Virginia Ave: 135 points
-  SKIPPED: incomplete OSM coverage
+  DONE: 53 named-road edges, 81 connector edges
 CLASSIFY #11 New York Ave: 104 points
-  chunk 5 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 6 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 7 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 8 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 9 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 10 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 11 failed: <HTTPError 429: 'Too Many Requests'>
-  SKIPPED: incomplete OSM coverage
+  DONE: 91 named-road edges, 12 connector edges
 CLASSIFY #12 North Carolina Ave: 40 points
-  chunk 1 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 2 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 3 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 4 failed: <HTTPError 429: 'Too Many Requests'>
-  SKIPPED: incomplete OSM coverage
+  DONE: 33 named-road edges, 6 connector edges
 CLASSIFY #13 Rhode Island Ave: 98 points
-  chunk 1 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 2 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 3 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 4 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 5 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 6 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 7 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 8 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 9 failed: <HTTPError 429: 'Too Many Requests'>
+  chunk 3 failed: <HTTPError 400: 'Bad Request'>
   SKIPPED: incomplete OSM coverage
 CLASSIFY #14 Vermont Ave: 113 points
-  chunk 1 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 2 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 4 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 7 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 11 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 12 failed: <HTTPError 429: 'Too Many Requests'>
-  SKIPPED: incomplete OSM coverage
+  DONE: 80 named-road edges, 32 connector edges
 CLASSIFY #15 Kentucky Ave: 21 points
-  chunk 2 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 3 failed: <HTTPError 429: 'Too Many Requests'>
-  SKIPPED: incomplete OSM coverage
+  Rate limited; waiting 15s
+  Rate limited; waiting 30s
+  DONE: 20 named-road edges, 0 connector edges
 CLASSIFY #16 Tennessee Ave: 12 points
-  chunk 1 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 2 failed: <HTTPError 429: 'Too Many Requests'>
-  SKIPPED: incomplete OSM coverage
+  DONE: 11 named-road edges, 0 connector edges
 CLASSIFY #17 Ohio Dr: 184 points
-  chunk 1 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 2 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 4 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 6 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 9 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 11 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 15 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 17 failed: <HTTPError 429: 'Too Many Requests'>
-  chunk 19 failed: <HTTPError 429: 'Too Many Requests'>
-  SKIPPED: incomplete OSM coverage
-FAILED: ['#2 Pennsylvania Ave: 0 ways, 0 failed chunks', '#3 New Jersey Ave: 0 ways, 0 failed chunks', '#4 Georgia Ave: 0 ways, 0 failed chunks', '#5 Connecticut Ave: 0 ways, 1 failed chunks', '#6 Massachusetts Ave: 0 ways, 0 failed chunks', '#7 Maryland Ave: 0 ways, 0 failed chunks', '#8 South Carolina Ave: 0 ways, 0 failed chunks', '#9 New Hampshire Ave: 0 ways, 0 failed chunks', '#10 Virginia Ave: 0 ways, 0 failed chunks', '#11 New York Ave: 0 ways, 7 failed chunks', '#12 North Carolina Ave: 0 ways, 4 failed chunks', '#13 Rhode Island Ave: 0 ways, 9 failed chunks', '#14 Vermont Ave: 0 ways, 6 failed chunks', '#15 Kentucky Ave: 0 ways, 2 failed chunks', '#16 Tennessee Ave: 0 ways, 2 failed chunks', '#17 Ohio Dr: 0 ways, 9 failed chunks']
+  Rate limited; waiting 15s
+  Rate limited; waiting 30s
+  DONE: 173 named-road edges, 10 connector edges
+FAILED: ['#2 Pennsylvania Ave: 209 ways, 1 failed chunks', '#5 Connecticut Ave: 60 ways, 1 failed chunks', '#6 Massachusetts Ave: 170 ways, 1 failed chunks', '#13 Rhode Island Ave: 82 ways, 1 failed chunks']
 Traceback (most recent call last):
-  File "/home/runner/work/bonch-test/bonch-test/union/classify_remaining.py", line 78, in <module>
+  File "/home/runner/work/bonch-test/bonch-test/union/classify_remaining.py", line 87, in <module>
     raise RuntimeError("; ".join(failures))
-RuntimeError: #2 Pennsylvania Ave: 0 ways, 0 failed chunks; #3 New Jersey Ave: 0 ways, 0 failed chunks; #4 Georgia Ave: 0 ways, 0 failed chunks; #5 Connecticut Ave: 0 ways, 1 failed chunks; #6 Massachusetts Ave: 0 ways, 0 failed chunks; #7 Maryland Ave: 0 ways, 0 failed chunks; #8 South Carolina Ave: 0 ways, 0 failed chunks; #9 New Hampshire Ave: 0 ways, 0 failed chunks; #10 Virginia Ave: 0 ways, 0 failed chunks; #11 New York Ave: 0 ways, 7 failed chunks; #12 North Carolina Ave: 0 ways, 4 failed chunks; #13 Rhode Island Ave: 0 ways, 9 failed chunks; #14 Vermont Ave: 0 ways, 6 failed chunks; #15 Kentucky Ave: 0 ways, 2 failed chunks; #16 Tennessee Ave: 0 ways, 2 failed chunks; #17 Ohio Dr: 0 ways, 9 failed chunks
+RuntimeError: #2 Pennsylvania Ave: 209 ways, 1 failed chunks; #5 Connecticut Ave: 60 ways, 1 failed chunks; #6 Massachusetts Ave: 170 ways, 1 failed chunks; #13 Rhode Island Ave: 82 ways, 1 failed chunks
