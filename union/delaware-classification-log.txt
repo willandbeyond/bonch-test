@@ -1,21 +1,25 @@
-Fetching primary OSM map API
-Traceback (most recent call last):
-  File "/home/runner/work/bonch-test/bonch-test/union/classify_delaware.py", line 19, in <module>
-    with urllib.request.urlopen(urllib.request.Request(url,headers={"User-Agent":"bonch-fyi-route-classifier/1.0"}),timeout=90) as response:
-         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.14/urllib/request.py", line 187, in urlopen
-    return opener.open(url, data, timeout)
-           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.14/urllib/request.py", line 493, in open
-    response = meth(req, response)
-  File "/usr/lib/python3.14/urllib/request.py", line 602, in http_response
-    response = self.parent.error(
-        'http', request, response, code, msg, hdrs)
-  File "/usr/lib/python3.14/urllib/request.py", line 531, in error
-    return self._call_chain(*args)
-           ~~~~~~~~~~~~~~~~^^^^^^^
-  File "/usr/lib/python3.14/urllib/request.py", line 464, in _call_chain
-    result = func(*args)
-  File "/usr/lib/python3.14/urllib/request.py", line 611, in http_error_default
-    raise HTTPError(req.full_url, code, msg, hdrs, fp)
-urllib.error.HTTPError: HTTP Error 400: Bad Request
+OSM chunk 1: -77.01489,38.87297,-77.01273,38.87529
+OSM chunk 2: -77.01489,38.87358,-77.01229,38.88032
+OSM chunk 3: -77.01319,38.87942,-77.01167,38.88073
+OSM chunk 4: -77.01261,38.87884,-77.00910,38.88073
+OSM chunk 5: -77.01260,38.87884,-77.00880,38.88097
+OSM chunk 6: -77.01008,38.87928,-77.00879,38.88200
+OSM chunk 7: -77.00969,38.88104,-77.00855,38.88331
+OSM chunk 8: -77.01092,38.88241,-77.00855,38.88545
+OSM chunk 9: -77.01120,38.88373,-77.00891,38.88643
+OSM chunk 10: -77.01117,38.88476,-77.00871,38.88736
+OSM chunk 11: -77.00970,38.88618,-77.00872,38.88823
+OSM chunk 12: -77.00964,38.88733,-77.00805,38.88884
+OSM chunk 13: -77.00906,38.88786,-77.00782,38.88962
+OSM chunk 14: -77.00872,38.88871,-77.00782,38.89043
+OSM chunk 15: -77.00872,38.88951,-77.00780,38.89147
+OSM chunk 16: -77.00872,38.89031,-77.00772,38.89195
+OSM chunk 17: -77.00865,38.89102,-77.00757,38.89247
+OSM chunk 18: -77.00860,38.89150,-77.00697,38.89418
+OSM chunk 19: -77.00789,38.89318,-77.00655,38.89530
+OSM chunk 20: -77.00747,38.89435,-77.00628,38.89626
+OSM chunk 21: -77.00726,38.89536,-77.00477,38.89702
+OSM chunk 22: -77.00582,38.89605,-77.00306,38.89780
+OSM chunk 23: -77.00501,38.89689,-77.00306,38.90386
+OSM chunk 24: -77.00403,38.90244,-77.00260,38.90610
+OSM ways: 21 named-road edges: 73 connector edges: 118
