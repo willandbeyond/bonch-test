@@ -30,6 +30,31 @@ for feature in data["features"]:
     ways, seen = [], set()
     failed_chunks = 0
     print(f"CLASSIFY #{n} {name}: {len(coords)} points", flush=True)
+    def fetch_box(west, south, east, north, depth=0):
+        url=f"https://api.openstreetmap.org/api/0.6/map?bbox={west},{south},{east},{north}"
+        req=urllib.request.Request(url,headers={"User-Agent":"bonch-fyi-route-classifier/1.0 (route visualization)"})
+        for attempt in range(4):
+            try:
+                with urllib.request.urlopen(req,timeout=45) as response:
+                    return [ET.parse(response).getroot()]
+            except urllib.error.HTTPError as exc:
+                if exc.code == 400 and depth < 5:
+                    # OSM can reject dense downtown areas even with tiny boxes.
+                    if (east-west)*math.cos(math.radians((north+south)/2)) > north-south:
+                        mid=(west+east)/2
+                        boxes=[(west,south,mid,north),(mid,south,east,north)]
+                    else:
+                        mid=(south+north)/2
+                        boxes=[(west,south,east,mid),(west,mid,east,north)]
+                    results=[]
+                    for box in boxes:
+                        results.extend(fetch_box(*box,depth+1))
+                    return results
+                if exc.code == 429 and attempt < 3:
+                    time.sleep(15*(attempt+1))
+                    continue
+                raise
+
     for i in range(0, len(coords), 8):
         chunk = coords[max(0,i-1):min(len(coords),i+9)]
         pad = .00045
@@ -37,32 +62,18 @@ for feature in data["features"]:
         east=max(c[0] for c in chunk)+pad
         south=min(c[1] for c in chunk)-pad
         north=max(c[1] for c in chunk)+pad
-        # OSM API rejects bounding boxes whose area exceeds 0.25 square degrees
-        # and some high-density urban blocks exceed its node limit.
-        url=f"https://api.openstreetmap.org/api/0.6/map?bbox={west},{south},{east},{north}"
         try:
-            req=urllib.request.Request(url,headers={"User-Agent":"bonch-fyi-route-classifier/1.0 (route visualization)"})
-            for attempt in range(4):
-                try:
-                    with urllib.request.urlopen(req,timeout=45) as response:
-                        root=ET.parse(response).getroot()
-                    break
-                except urllib.error.HTTPError as exc:
-                    if exc.code != 429 or attempt == 3:
-                        raise
-                    delay = 15 * (attempt+1)
-                    print(f"  Rate limited; waiting {delay}s",flush=True)
-                    time.sleep(delay)
-            nodes={node.attrib["id"]:(float(node.attrib["lon"]),float(node.attrib["lat"])) for node in root.findall("node")}
-            for way in root.findall("way"):
-                wid=way.attrib["id"]
-                if wid in seen: continue
-                tags={tag.attrib["k"]:tag.attrib["v"] for tag in way.findall("tag")}
-                if "highway" not in tags or not pattern.search(tags.get("name","")): continue
-                pts=[nodes[nd.attrib["ref"]] for nd in way.findall("nd") if nd.attrib["ref"] in nodes]
-                if len(pts)>1:
-                    ways.append(pts)
-                    seen.add(wid)
+            roots=fetch_box(west,south,east,north)
+            for root in roots:
+                nodes={node.attrib["id"]:(float(node.attrib["lon"]),float(node.attrib["lat"])) for node in root.findall("node")}
+                for way in root.findall("way"):
+                    wid=way.attrib["id"]
+                    tags={tag.attrib["k"]:tag.attrib["v"] for tag in way.findall("tag")}
+                    if "highway" not in tags or not pattern.search(tags.get("name","")): continue
+                    pts=[nodes[nd.attrib["ref"]] for nd in way.findall("nd") if nd.attrib["ref"] in nodes]
+                    if len(pts)>1:
+                        ways.append(pts)
+                        seen.add(wid)
         except Exception as exc:
             failed_chunks += 1
             print(f"  chunk {i//8+1} failed: {exc!r}",flush=True)
