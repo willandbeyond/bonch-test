@@ -30,8 +30,8 @@ for feature in data["features"]:
     ways, seen = [], set()
     failed_chunks = 0
     print(f"CLASSIFY #{n} {name}: {len(coords)} points", flush=True)
-    for i in range(0, len(coords), 20):
-        chunk = coords[max(0,i-1):min(len(coords),i+21)]
+    for i in range(0, len(coords), 8):
+        chunk = coords[max(0,i-1):min(len(coords),i+9)]
         pad = .00045
         west=min(c[0] for c in chunk)-pad
         east=max(c[0] for c in chunk)+pad
@@ -65,7 +65,7 @@ for feature in data["features"]:
                     seen.add(wid)
         except Exception as exc:
             failed_chunks += 1
-            print(f"  chunk {i//20+1} failed: {exc!r}",flush=True)
+            print(f"  chunk {i//8+1} failed: {exc!r}",flush=True)
         time.sleep(2.5)
     if not ways or failed_chunks:
         failures.append(f"#{n} {name}: {len(ways)} ways, {failed_chunks} failed chunks")
