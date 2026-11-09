@@ -11,23 +11,34 @@ query=f'[out:json][timeout:90];way["highway"]["name"~"^Delaware (Avenue|Ave)",i]
 import xml.etree.ElementTree as ET
 ways=[]
 seen=set()
-pad=.0015
-west=min(lons)-pad; east=max(lons)+pad
-south=min(lats)-pad; north=max(lats)+pad
-url=f"https://api.openstreetmap.org/api/0.6/map?bbox={west},{south},{east},{north}"
-print("Fetching primary OSM map API",flush=True)
-with urllib.request.urlopen(urllib.request.Request(url,headers={"User-Agent":"bonch-fyi-route-classifier/1.0"}),timeout=90) as response:
-    root=ET.parse(response).getroot()
-nodes={n.attrib["id"]:(float(n.attrib["lon"]),float(n.attrib["lat"])) for n in root.findall("node")}
-for w in root.findall("way"):
-    wid=w.attrib["id"]
-    if wid in seen:continue
-    tags={t.attrib["k"]:t.attrib["v"] for t in w.findall("tag")}
-    if "highway" not in tags or not __import__("re").search(r"^Delaware (Avenue|Ave)",tags.get("name",""),__import__("re").I):continue
-    pts=[nodes[n.attrib["ref"]] for n in w.findall("nd") if n.attrib["ref"] in nodes]
-    if len(pts)>1:
-        ways.append(pts)
-        seen.add(wid)
+# Small overlapping bounding boxes avoid the OSM API's maximum-node limit.
+import re, time
+for i in range(0,len(coords),8):
+    chunk=coords[max(0,i-1):min(len(coords),i+9)]
+    pad=.00045
+    west=min(c[0] for c in chunk)-pad
+    east=max(c[0] for c in chunk)+pad
+    south=min(c[1] for c in chunk)-pad
+    north=max(c[1] for c in chunk)+pad
+    url=f"https://api.openstreetmap.org/api/0.6/map?bbox={west},{south},{east},{north}"
+    print(f"OSM chunk {i//8+1}: {west:.5f},{south:.5f},{east:.5f},{north:.5f}",flush=True)
+    try:
+        with urllib.request.urlopen(urllib.request.Request(url,headers={"User-Agent":"bonch-fyi-route-classifier/1.0 (route visualization)"}),timeout=45) as response:
+            root=ET.parse(response).getroot()
+    except Exception as exc:
+        print("Chunk failed",repr(exc),flush=True)
+        continue
+    nodes={n.attrib["id"]:(float(n.attrib["lon"]),float(n.attrib["lat"])) for n in root.findall("node")}
+    for w in root.findall("way"):
+        wid=w.attrib["id"]
+        if wid in seen:continue
+        tags={t.attrib["k"]:t.attrib["v"] for t in w.findall("tag")}
+        if "highway" not in tags or not re.search(r"^Delaware (Avenue|Ave)",tags.get("name",""),re.I):continue
+        pts=[nodes[n.attrib["ref"]] for n in w.findall("nd") if n.attrib["ref"] in nodes]
+        if len(pts)>1:
+            ways.append(pts)
+            seen.add(wid)
+    time.sleep(.3)
 if not ways:raise ValueError("OSM map API returned no Delaware Avenue road geometry")
 def distance_m(p,a,b):
     k=111320; c=math.cos(math.radians(p[1]))
