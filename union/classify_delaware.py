@@ -6,18 +6,33 @@ coords=feature["geometry"]["coordinates"]
 lats=[c[1] for c in coords]; lons=[c[0] for c in coords]
 bbox=(min(lats)-.004,min(lons)-.004,max(lats)+.004,max(lons)+.004)
 query=f'[out:json][timeout:90];way["highway"]["name"~"^Delaware (Avenue|Ave)",i]({bbox[0]},{bbox[1]},{bbox[2]},{bbox[3]});out geom;'
-osm=None
-for endpoint in ("https://overpass.private.coffee/api/interpreter","https://overpass.nchc.org.tw/api/interpreter","https://overpass-api.de/api/interpreter"):
-    try:
-        print("Trying",endpoint,flush=True)
-        req=urllib.request.Request(endpoint,data=urllib.parse.urlencode({"data":query}).encode(),headers={"User-Agent":"bonch-fyi-union-route-classifier/1.0"})
-        with urllib.request.urlopen(req,timeout=45) as response: osm=json.load(response)
-        break
-    except Exception as exc:
-        print("Endpoint failed:",repr(exc),flush=True)
-if osm is None: raise RuntimeError("All Overpass endpoints failed")
-ways=[[(pt["lon"],pt["lat"]) for pt in w["geometry"]] for w in osm["elements"] if w.get("geometry")]
-if not ways: raise ValueError("No Delaware Avenue road geometry returned")
+# Fetch named ways from the primary OSM API in narrow bounding boxes.
+# This avoids Overpass servers entirely.
+import xml.etree.ElementTree as ET
+ways=[]
+seen=set()
+for i in range(0,len(coords),18):
+    chunk=coords[max(0,i-1):min(len(coords),i+19)]
+    pad=.0012
+    west=min(c[0] for c in chunk)-pad
+    east=max(c[0] for c in chunk)+pad
+    south=min(c[1] for c in chunk)-pad
+    north=max(c[1] for c in chunk)+pad
+    url=f"https://api.openstreetmap.org/api/0.6/map?bbox={west},{south},{east},{north}"
+    print("Fetching OSM map chunk",i//18+1,flush=True)
+    with urllib.request.urlopen(urllib.request.Request(url,headers={"User-Agent":"bonch-fyi-route-classifier/1.0"}),timeout=90) as response:
+        root=ET.parse(response).getroot()
+    nodes={n.attrib["id"]:(float(n.attrib["lon"]),float(n.attrib["lat"])) for n in root.findall("node")}
+    for w in root.findall("way"):
+        wid=w.attrib["id"]
+        if wid in seen:continue
+        tags={t.attrib["k"]:t.attrib["v"] for t in w.findall("tag")}
+        if "highway" not in tags or not __import__("re").search(r"^Delaware (Avenue|Ave)",tags.get("name",""),__import__("re").I):continue
+        pts=[nodes[n.attrib["ref"]] for n in w.findall("nd") if n.attrib["ref"] in nodes]
+        if len(pts)>1:
+            ways.append(pts)
+            seen.add(wid)
+if not ways:raise ValueError("OSM map API returned no Delaware Avenue road geometry")
 def distance_m(p,a,b):
     k=111320; c=math.cos(math.radians(p[1]))
     x,y=(p[0]-a[0])*k*c,(p[1]-a[1])*k
