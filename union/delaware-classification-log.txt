@@ -1,11 +1,4 @@
-Trying https://overpass.private.coffee/api/interpreter
-Endpoint failed: TimeoutError('The read operation timed out')
-Trying https://overpass.nchc.org.tw/api/interpreter
-Endpoint failed: URLError(gaierror(-2, 'Name or service not known'))
-Trying https://overpass-api.de/api/interpreter
-Endpoint failed: <HTTPError 502: 'Bad Gateway'>
-Traceback (most recent call last):
-  File "/home/runner/work/bonch-test/bonch-test/union/classify_delaware.py", line 18, in <module>
-    if osm is None: raise RuntimeError("All Overpass endpoints failed")
-                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-RuntimeError: All Overpass endpoints failed
+  File "/home/runner/work/bonch-test/bonch-test/union/classify_delaware.py", line 33
+    k=111320; c=math.cos(math.radians(p[1]))
+    ^
+IndentationError: expected an indented block after function definition on line 32
