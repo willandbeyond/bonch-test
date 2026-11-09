@@ -1,0 +1,30 @@
+name: Import Running the Union GPX
+on:
+  push:
+    paths:
+      - '.github/workflows/import-union-gpx.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download shared GPX folder
+        run: |
+          curl --fail --location --retry 3 --max-time 180 -o routes.zip 'https://www.dropbox.com/scl/fo/unr1nk9or68t50lu2aaew/AAiB8BznDww4pxOUzNL25xY?rlkey=zy2anl5ks30aw531k4gxqipp8&dl=1'
+          unzip -t routes.zip | tail -3
+          mkdir downloaded
+          unzip -q routes.zip -d downloaded
+      - name: Convert and validate all 17 routes
+        run: python union/import_gpx.py
+      - name: Publish route data
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add union/routes.geojson
+          if ! git diff --cached --quiet; then
+            git commit -m 'union: publish 17 imported GPX route traces'
+            git push
+          fi
