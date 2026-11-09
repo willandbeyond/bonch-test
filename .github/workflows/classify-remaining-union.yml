@@ -1,0 +1,37 @@
+name: Classify remaining Union roads
+on:
+  push:
+    paths:
+      - '.github/workflows/classify-remaining-union.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: classify-union-roads
+  cancel-in-progress: false
+jobs:
+  classify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Classify named roads against OpenStreetMap
+        id: classify
+        continue-on-error: true
+        run: python union/classify_remaining.py > union/classify-remaining-log.txt 2>&1
+      - name: Save results and diagnostics
+        if: always()
+        run: |
+          tail -80 union/classify-remaining-log.txt || true
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add union/routes.geojson union/classify-remaining-log.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'union: publish named-road classifications and diagnostics'
+            git push
+          fi
+      - name: Report partial failures
+        if: steps.classify.outcome == 'failure'
+        run: |
+          echo 'Some routes could not be classified. See union/classify-remaining-log.txt.'
+          exit 1
