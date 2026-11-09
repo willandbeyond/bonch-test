@@ -16,8 +16,18 @@ jobs:
           curl --location --retry 2 --max-time 90 -w 'HTTP %{http_code}; bytes %{size_download}; type %{content_type}\n' -o routes.zip 'https://www.dropbox.com/scl/fo/unr1nk9or68t50lu2aaew/AAiB8BznDww4pxOUzNL25xY?rlkey=zy2anl5ks30aw531k4gxqipp8&dl=1'
           file routes.zip
           unzip -t routes.zip | tail -3
-          mkdir downloaded
-          unzip -q routes.zip -d downloaded
+          python - <<'PY'
+          import pathlib, re, zipfile
+          dest = pathlib.Path("downloaded")
+          dest.mkdir(exist_ok=True)
+          with zipfile.ZipFile("routes.zip") as archive:
+              for member in archive.infolist():
+                  name = pathlib.PurePosixPath(member.filename).name
+                  if not re.fullmatch(r"Running the Union #\\d+ .+\\.gpx", name, re.I):
+                      continue
+                  (dest / name).write_bytes(archive.read(member))
+                  print("Extracted", name)
+          PY
       - name: Convert and validate all 17 routes
         run: python union/import_gpx.py
       - name: Publish route data
