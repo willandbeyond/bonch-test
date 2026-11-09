@@ -1,0 +1,14 @@
+Run: 42666265386
+Result: failure
+Downloaded bytes: 51861876
+File type: Zip archive data, at least v2.0 to extract, compression method=store
+ZIP signature:  50 4b 03 04
+ZIP test:
+    testing: Running The Union #9 New Hampshire Ave.gpx   OK
+    testing: Running The Union #13 Rhode Island Ave.gpx   OK
+    testing: Running The Union #8 South Carolina Ave.gpx   OK
+    testing: Running The Union #12 North Carolina Ave.gpx   OK
+    testing: parkrun Roosevelt Island 08222026 Results.pdf   OK
+    testing: Ragnar SoCal 04102026 GPT training record.pdf   OK
+    testing: City of Oaks and Parks HM 11012026 GPT training record.pdf   OK
+No errors detected in compressed data of routes.zip.
