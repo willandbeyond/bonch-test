@@ -1,15 +1,5 @@
 CLASSIFY #2 Pennsylvania Ave: 297 points
-  chunk 9 failed: <HTTPError 400: 'Bad Request'>
-  SKIPPED: incomplete OSM coverage
+  DONE: 224 named-road edges, 72 connector edges
 CLASSIFY #5 Connecticut Ave: 94 points
-  chunk 3 failed: <HTTPError 400: 'Bad Request'>
-  SKIPPED: incomplete OSM coverage
-CLASSIFY #6 Massachusetts Ave: 386 points
-  DONE: 215 named-road edges, 170 connector edges
-CLASSIFY #13 Rhode Island Ave: 98 points
-  DONE: 89 named-road edges, 8 connector edges
-FAILED: ['#2 Pennsylvania Ave: 210 ways, 1 failed chunks', '#5 Connecticut Ave: 72 ways, 1 failed chunks']
-Traceback (most recent call last):
-  File "/home/runner/work/bonch-test/bonch-test/union/classify_remaining.py", line 89, in <module>
-    raise RuntimeError("; ".join(failures))
-RuntimeError: #2 Pennsylvania Ave: 210 ways, 1 failed chunks; #5 Connecticut Ave: 72 ways, 1 failed chunks
+  DONE: 70 named-road edges, 23 connector edges
+FAILED: []
