@@ -19,8 +19,8 @@ document.getElementById('bar').style.width=(done.length/50*100)+'%';
 document.querySelector('.progress').setAttribute('aria-valuenow',done.length);
 function extractSong(note){if(!note)return '';const match=note.match(/^["“]([^"”]+)["”]\\s+by\\s+([^,;]+?)(?=,|$)/i);return match?'"'+match[1]+'" — '+match[2].trim()+'':''}
 function stateHash(s){return '#'+stateCodes[s.n-1]}
-function stateUrl(s){return location.origin+location.pathname.replace(/index\\.html$/,'')+stateHash(s)}
-function makeResource(label,url,kind,action){const el=document.createElement(url?'a':'button');if(url){el.href=url;el.target=url.startsWith('#')?'_self':'_blank';if(el.target==='_blank')el.rel='noopener noreferrer'}else{el.type='button';if(action)el.addEventListener('click',action)}const icon=document.createElement('span');icon.className='resource-icon';if(kind==='link'){icon.textContent='🔗'}else{const img=document.createElement('img');img.alt='';img.src=kind==='plot'?'https://www.plotaroute.com/favicon.ico':kind==='strava'?'https://www.strava.com/favicon.ico':'https://open.spotify.com/favicon.ico';icon.append(img)}el.append(icon,document.createTextNode(label));return el}
+function stateUrl(s){return location.origin+location.pathname.replace(/index\.html$/,'')+stateHash(s)}
+function makeResource(label,url,kind,action){const el=document.createElement(url?'a':'button');if(url){el.href=url;el.target=kind==='link'?'_self':'_blank';if(el.target==='_blank')el.rel='noopener noreferrer'}else{el.type='button';if(action)el.addEventListener('click',action)}const icon=document.createElement('span');icon.className='resource-icon';if(kind==='link'){icon.textContent='🔗'}else{const img=document.createElement('img');img.alt='';img.src=kind==='plot'?'https://www.plotaroute.com/favicon.ico':kind==='strava'?'https://www.strava.com/favicon.ico':'https://open.spotify.com/favicon.ico';icon.append(img)}el.append(icon,document.createTextNode(label));return el}
 function detailRow(label,url,kind){const row=document.createElement('div');row.className='detail-resource-row';row.append(makeResource(label,url,kind));return row}
 function render(){
 list.replaceChildren();
