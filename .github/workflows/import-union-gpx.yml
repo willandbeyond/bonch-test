@@ -2,7 +2,8 @@ name: Import Running the Union GPX
 on:
   push:
     paths:
-      - '.github/workflows/import-union-gpx.yml'\n      - 'union/import_gpx.py'
+      - '.github/workflows/import-union-gpx.yml'
+      - 'union/import_gpx.py'
   workflow_dispatch:
 permissions:
   contents: write
