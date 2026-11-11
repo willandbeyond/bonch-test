@@ -1,5 +1,5 @@
-CLASSIFY #2 Pennsylvania Ave: 297 points
-  DONE: 224 named-road edges, 72 connector edges
-CLASSIFY #5 Connecticut Ave: 94 points
-  DONE: 70 named-road edges, 23 connector edges
+CLASSIFY #10 Virginia Ave: 165 points
+  DONE: 69 named-road edges, 95 connector edges
+CLASSIFY #11 New York Ave: 91 points
+  DONE: 78 named-road edges, 12 connector edges
 FAILED: []
