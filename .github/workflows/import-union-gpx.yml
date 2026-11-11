@@ -2,7 +2,7 @@ name: Import Running the Union GPX
 on:
   push:
     paths:
-      - '.github/workflows/import-union-gpx.yml'
+      - '.github/workflows/import-union-gpx.yml'\n      - 'union/import_gpx.py'
   workflow_dispatch:
 permissions:
   contents: write
@@ -30,13 +30,15 @@ jobs:
           PY
       - name: Convert and validate all 17 routes
         run: python union/import_gpx.py
+      - name: Reclassify updated Virginia and New York roads
+        run: python union/classify_remaining.py > union/classify-remaining-log.txt 2>&1
       - name: Publish route data
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add union/routes.geojson
+          git add union/routes.geojson union/classify-remaining-log.txt
           if ! git diff --cached --quiet; then
-            git commit -m 'union: publish 17 imported GPX route traces'
+            git commit -m 'union: refresh and classify Virginia and New York GPX traces'
             git push
           fi
 
