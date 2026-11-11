@@ -51,6 +51,6 @@ function choose(s){strip.value=String(s.n);detail(s);showRoute(s);updateArrows()
 function step(delta){const i=strip.value==='all'?0:Number(strip.value);const j=(i+delta+51)%51;if(j===0)showAll();else choose(states[j-1])}
 strip.addEventListener('change',()=>{if(strip.value==='all')showAll();else choose(states[Number(strip.value)-1])});
 prev.addEventListener('click',()=>step(-1));next.addEventListener('click',()=>step(1));
-fetch('./routes.geojson').then(r=>r.ok?r.json():null).then(g=>{if(!g||!g.features)return;g.features.forEach(f=>{const n=String(f.properties?.number||'');if(n)routeData[n]=f});render();showAll();}).catch(()=>{});showAll();setTimeout(()=>dcmap.invalidateSize(),200);
+fetch('./routes.geojson').then(r=>r.ok?r.json():null).then(g=>{if(!g||!g.features)return;g.features.forEach(f=>{const n=String(f.properties?.number||'');if(n)routeData[n]=f});const completedMiles=done.reduce((sum,state)=>sum+(mileage(routeData[String(state.n)])?.total||0),0);document.getElementById('miles').textContent=completedMiles.toFixed(2);render();showAll();}).catch(()=>{});showAll();setTimeout(()=>dcmap.invalidateSize(),200);
 search.addEventListener('input',render);sort.addEventListener('change',render);render();
 </script></body></html>
