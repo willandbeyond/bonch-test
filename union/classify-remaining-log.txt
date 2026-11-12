@@ -1,5 +1,5 @@
-CLASSIFY #10 Virginia Ave: 165 points
-  DONE: 69 named-road edges, 95 connector edges
-CLASSIFY #11 New York Ave: 91 points
-  DONE: 78 named-road edges, 12 connector edges
+CLASSIFY #14 Vermont Ave: 106 points
+  DONE: 77 named-road edges, 28 connector edges
+CLASSIFY #18 Louisiana Ave: 16 points
+  DONE: 15 named-road edges, 0 connector edges
 FAILED: []
