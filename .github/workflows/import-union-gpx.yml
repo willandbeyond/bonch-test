@@ -7,9 +7,13 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+concurrency:
+  group: import-union-gpx
+  cancel-in-progress: false
 jobs:
   import:
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
       - name: Download shared GPX folder
@@ -29,9 +33,9 @@ jobs:
                   (dest / name).write_bytes(archive.read(member))
                   print("Extracted", name)
           PY
-      - name: Convert and validate all 17 routes
+      - name: Import corrected Vermont and new Louisiana GPX
         run: python union/import_gpx.py
-      - name: Reclassify updated Virginia and New York roads
+      - name: Classify newly imported and corrected named roads
         run: python union/classify_remaining.py > union/classify-remaining-log.txt 2>&1
       - name: Publish route data
         run: |
@@ -39,7 +43,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add union/routes.geojson union/classify-remaining-log.txt
           if ! git diff --cached --quiet; then
-            git commit -m 'union: refresh and classify Virginia and New York GPX traces'
+            git commit -m 'union: refresh Vermont and add Louisiana GPX traces'
             git push
           fi
 
