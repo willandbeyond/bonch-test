@@ -8,7 +8,7 @@ for file in folder.rglob("*.gpx"):
     match=re.search(r"Running the Union #([0-9]+) (.+?)\.gpx$",file.name,re.I)
     if not match: continue
     number=int(match.group(1))
-    if number not in (10,11):continue
+    if number not in (14,18):continue
     root=ET.parse(file).getroot()
     segments=[]
     for tag in ("trkseg","rte"):
@@ -21,13 +21,17 @@ for file in folder.rglob("*.gpx"):
             if len(coords)>=2:segments.append(coords)
     if not segments:raise ValueError(f"No coordinates in {file.name}")
     geometry={"type":"LineString","coordinates":segments[0]} if len(segments)==1 else {"type":"MultiLineString","coordinates":segments}
-    old=features[number]
+    old=features.get(number)
+    if old is None:
+        old={"type":"Feature","properties":{"number":number,"state":"Louisiana Ave" if number==18 else match.group(2),"source":"PlotARoute GPX"},"geometry":geometry}
+        features[number]=old
+        changed.append(number)
     if old["geometry"]!=geometry:
         old["geometry"]=geometry
         old["properties"].pop("namedRoadEdges",None)
         old["properties"].pop("classificationMethod",None)
         changed.append(number)
     print(f"#{number} {match.group(2)}: {sum(map(len,segments))} points")
-assert set(features)==set(range(1,18)), "Missing or duplicate route numbers"
+assert set(features)==set(range(1,19)), "Missing or duplicate route numbers"
 print(f"Updated GPX geometries: {changed}")
 pathlib.Path("union/routes.geojson").write_text(json.dumps({"type":"FeatureCollection","features":[features[n] for n in sorted(features)]},separators=(",",":")))
