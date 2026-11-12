@@ -1,14 +1,14 @@
-Run: 43265051554
+Run: 43285935290
 Result: success
-Downloaded bytes: 1846271
+Downloaded bytes: 1928853
 File type: Zip archive data, made by v2.0 UNIX, extract using at least v2.0, last modified Sep 04 2026 18:09:02, uncompressed size 0, method=store
 ZIP signature:  50 4b 03 04
 ZIP test:
-    testing: 01 Delaware/1.png        OK
-    testing: 01 Delaware/2.png        OK
-    testing: 01 Delaware/3.png        OK
-    testing: 01 Delaware/4.png        OK
-    testing: 01 Delaware/full.png     OK
-    testing: Running The Union #14 Vermont Ave.gpx   OK
+    testing: Running The Union #27 Florida Ave.gpx   OK
+    testing: Running The Union #21 Illinois Ave.gpx   OK
+    testing: Running The Union #24 Missouri Ave.gpx   OK
+    testing: Running The Union #25 Arkansas Ave.gpx   OK
+    testing: Running The Union #26 Michigan Ave.gpx   OK
     testing: Running The Union #18 Louisiana Ave.gpx   OK
+    testing: Running The Union #20 Mississippi Ave.gpx   OK
 No errors detected in compressed data of routes.zip.
