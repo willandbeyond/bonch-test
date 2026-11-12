@@ -1,5 +1,21 @@
-CLASSIFY #14 Vermont Ave: 106 points
-  DONE: 77 named-road edges, 28 connector edges
-CLASSIFY #18 Louisiana Ave: 16 points
-  DONE: 15 named-road edges, 0 connector edges
+CLASSIFY #19 Indiana Ave: 38 points
+  DONE: 23 named-road edges, 14 connector edges
+CLASSIFY #20 Mississippi Ave: 55 points
+  DONE: 54 named-road edges, 0 connector edges
+CLASSIFY #21 Illinois Ave: 54 points
+  DONE: 29 named-road edges, 24 connector edges
+CLASSIFY #22 Alabama Ave: 159 points
+  DONE: 158 named-road edges, 0 connector edges
+CLASSIFY #23 Maine Ave: 47 points
+  DONE: 46 named-road edges, 0 connector edges
+CLASSIFY #24 Missouri Ave: 48 points
+  DONE: 47 named-road edges, 0 connector edges
+CLASSIFY #25 Arkansas Ave: 31 points
+  DONE: 30 named-road edges, 0 connector edges
+CLASSIFY #26 Michigan Ave: 95 points
+  DONE: 94 named-road edges, 0 connector edges
+CLASSIFY #27 Florida Ave: 125 points
+  DONE: 124 named-road edges, 0 connector edges
+CLASSIFY #49 Alaska Ave: 12 points
+  DONE: 11 named-road edges, 0 connector edges
 FAILED: []
