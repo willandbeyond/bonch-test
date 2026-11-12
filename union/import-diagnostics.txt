@@ -1,14 +1,14 @@
-Run: 43264651801
-Result: failure
-Downloaded bytes: 51864350
-File type: Zip archive data, at least v2.0 to extract, compression method=store
+Run: 43265051554
+Result: success
+Downloaded bytes: 1846271
+File type: Zip archive data, made by v2.0 UNIX, extract using at least v2.0, last modified Sep 04 2026 18:09:02, uncompressed size 0, method=store
 ZIP signature:  50 4b 03 04
 ZIP test:
-    testing: Running The Union #9 New Hampshire Ave.gpx   OK
-    testing: Running The Union #13 Rhode Island Ave.gpx   OK
-    testing: Running The Union #8 South Carolina Ave.gpx   OK
-    testing: Running The Union #12 North Carolina Ave.gpx   OK
-    testing: parkrun Roosevelt Island 08222026 Results.pdf   OK
-    testing: Ragnar SoCal 04102026 GPT training record.pdf   OK
-    testing: City of Oaks and Parks HM 11012026 GPT training record.pdf   OK
+    testing: 01 Delaware/1.png        OK
+    testing: 01 Delaware/2.png        OK
+    testing: 01 Delaware/3.png        OK
+    testing: 01 Delaware/4.png        OK
+    testing: 01 Delaware/full.png     OK
+    testing: Running The Union #14 Vermont Ave.gpx   OK
+    testing: Running The Union #18 Louisiana Ave.gpx   OK
 No errors detected in compressed data of routes.zip.
