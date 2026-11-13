@@ -24,9 +24,9 @@ for feature in data["features"]:
         continue
     coords = geom["coordinates"]
     name = props["state"]
-    stem = re.sub(r"\s+(Ave|Avenue|Dr|Drive)\.?$", "", name, flags=re.I).strip()
+    stem = re.sub(r"\s+(Ave|Avenue|Dr|Drive|St|Street)\.?$", "", name, flags=re.I).strip()
     # Exact road name, including both Avenue and Drive variants.
-    pattern = re.compile(r"^" + re.escape(stem) + r"\s+(Avenue|Ave\.?|Drive|Dr\.?)(?:\s|$)", re.I)
+    pattern = re.compile(r"^" + re.escape(stem) + r"\s+(Avenue|Ave\.?|Drive|Dr\.?|Street|St\.?)(?:\s|$)", re.I)
     ways, seen = [], set()
     failed_chunks = 0
     print(f"CLASSIFY #{n} {name}: {len(coords)} points", flush=True)
