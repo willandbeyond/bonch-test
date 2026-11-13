@@ -4,6 +4,7 @@ on:
     paths:
       - '.github/workflows/import-union-gpx.yml'
       - 'union/import_gpx.py'
+      - 'union/classify_remaining.py'
   workflow_dispatch:
 permissions:
   contents: write
