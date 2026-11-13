@@ -54,6 +54,26 @@ function clearSelectionMode(){selectedRoutes.clear();multiSelectMode=false;const
 function showAll(){if(selectedRoutes.size||multiSelectMode)clearSelectionMode();strip.value='all';clearRoutes();const e=document.getElementById('selected-detail');e.replaceChildren();const h=document.createElement('h3');h.textContent='All plotted routes';e.append(h);const p=document.createElement('p');p.textContent=Object.keys(routeData).length+' plotted routes shown.';e.append(p);let totalRoad=0,totalConnector=0;for(const geo of Object.values(routeData)){const m=mileage(geo);if(m){totalRoad+=m.road;totalConnector+=m.connector}}e.append(mileageView({road:totalRoad,connector:totalConnector,total:totalRoad+totalConnector}));const layers=states.filter(s=>routeData[String(s.n)]).map(s=>addRoute(routeData[String(s.n)],4));drawn.push(...layers);if(layers.length){dcmap.fitBounds([[38.79,-77.12],[38.995,-76.91]],{paddingTopLeft:[88,28],paddingBottomRight:[28,28]})}else dcmap.setView([38.9072,-77.0369],12);updateArrows()}
 function choose(s){if(selectedRoutes.size||multiSelectMode)clearSelectionMode();strip.value=String(s.n);detail(s);showRoute(s);updateArrows()}
 function loadHash(){const code=decodeURIComponent(location.hash.slice(1)).toUpperCase();if(code.startsWith('SELECT=')){const parts=code.slice(7).split('&');showRouteLabels=!parts.slice(1).includes('LABELS=0');const nums=parts[0].split(',').map(c=>stateCodes.indexOf(c)+1).filter(n=>n>0);if(nums.length){selectedRoutes.clear();nums.forEach(n=>selectedRoutes.add(n));multiSelectMode=true;const toggle=document.getElementById('multi-select-toggle');toggle.setAttribute('aria-pressed','true');toggle.classList.add('active');render();showCustomSelection();return}}const n=stateCodes.indexOf(code)+1;if(n)choose(states[n-1]);else showAll()}
+// Warm the browser image cache for all 50 locally hosted flags without flooding the network.
+// Keep Image objects referenced while loading; prioritize the initially selected flag.
+const flagPreloads=[];
+function preloadStateFlags(){
+  const current=stateCodes.indexOf(decodeURIComponent(location.hash.slice(1)).toUpperCase())+1;
+  const order=Array.from({length:50},(_,i)=>i+1);
+  if(current>0)order.unshift(...order.splice(current-1,1));
+  let next=0;
+  const worker=()=>{
+    if(next>=order.length)return;
+    const n=order[next++];
+    const img=new Image();
+    flagPreloads.push(img);
+    img.onload=worker;
+    img.onerror=worker;
+    img.src='./flags/'+String(n).padStart(2,'0')+'.png';
+  };
+  for(let i=0;i<4;i++)worker();
+}
+preloadStateFlags();
 window.addEventListener('hashchange',loadHash);
 function step(delta){const i=strip.value==='all'?0:Number(strip.value);const j=(i+delta+51)%51;if(j===0){history.replaceState(null,'',location.pathname+location.search);showAll()}else{location.hash=stateHash(states[j-1]);choose(states[j-1])}}
 strip.addEventListener('change',()=>{if(strip.value==='all'){history.replaceState(null,'',location.pathname+location.search);showAll()}else{const selected=states[Number(strip.value)-1];location.hash=stateHash(selected);choose(selected)}});
