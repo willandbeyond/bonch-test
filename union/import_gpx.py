@@ -8,7 +8,7 @@ for file in folder.rglob("*.gpx"):
     match=re.search(r"Running the Union #([0-9]+) (.+?)\.gpx$",file.name,re.I)
     if not match: continue
     number=int(match.group(1))
-    if number not in (14,18,19,20,21,22,23,24,25,26,27,49):continue
+    if number not in range(28,44):continue
     root=ET.parse(file).getroot()
     segments=[]
     for tag in ("trkseg","rte"):
@@ -32,6 +32,6 @@ for file in folder.rglob("*.gpx"):
         old["properties"].pop("classificationMethod",None)
         changed.append(number)
     print(f"#{number} {match.group(2)}: {sum(map(len,segments))} points")
-assert set(range(1,28)).issubset(features) and 49 in features, "Missing expected routes"
+assert set(range(1,44)).issubset(features) and 49 in features, "Missing expected routes"
 print(f"Updated GPX geometries: {changed}")
 pathlib.Path("union/routes.geojson").write_text(json.dumps({"type":"FeatureCollection","features":[features[n] for n in sorted(features)]},separators=(",",":")))
