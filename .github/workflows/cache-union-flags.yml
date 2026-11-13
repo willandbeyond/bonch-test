@@ -1,0 +1,27 @@
+name: Cache Running the Union state flags
+on:
+  push:
+    paths:
+      - '.github/workflows/cache-union-flags.yml'
+      - 'union/cache_flags.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  cache:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download state flags from Wikimedia Commons
+        run: python union/cache_flags.py
+      - name: Commit cached SVGs to the test site
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add union/flags/
+          if ! git diff --cached --quiet; then
+            git commit -m 'union: host all 50 state flags locally'
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
