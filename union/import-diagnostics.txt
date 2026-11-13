@@ -1,5 +1,5 @@
-Run: 43434841994
-Result: failure
+Run: 43436369845
+Result: success
 Downloaded bytes: 2041412
 File type: Zip archive data, made by v2.0 UNIX, extract using at least v2.0, last modified Sep 04 2026 18:09:02, uncompressed size 0, method=store
 ZIP signature:  50 4b 03 04
@@ -20,7 +20,7 @@ CLASSIFY #29 Iowa Ave: 22 points
 CLASSIFY #30 Wisconsin Ave: 53 points
   DONE: 52 named-road edges, 0 connector edges
 CLASSIFY #31 California St: 17 points
-  SKIPPED: incomplete OSM coverage
+  DONE: 12 named-road edges, 4 connector edges
 CLASSIFY #32 Minnesota Ave: 105 points
   DONE: 91 named-road edges, 13 connector edges
 CLASSIFY #33 Oregon Ave: 38 points
@@ -45,8 +45,4 @@ CLASSIFY #42 Washington Ave: 23 points
   DONE: 22 named-road edges, 0 connector edges
 CLASSIFY #43 Idaho Ave: 25 points
   DONE: 18 named-road edges, 6 connector edges
-FAILED: ['#31 California St: 0 ways, 0 failed chunks']
-Traceback (most recent call last):
-  File "/home/runner/work/bonch-test/bonch-test/union/classify_remaining.py", line 100, in <module>
-    raise RuntimeError("; ".join(failures))
-RuntimeError: #31 California St: 0 ways, 0 failed chunks
+FAILED: []
