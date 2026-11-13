@@ -38,8 +38,8 @@ for index, state in enumerate(STATES, 1):
         if not destination.exists():
             url, attribution = image_url(state)
             content = fetch(url)
-            if b"<svg" not in content[:5000]:
-                raise ValueError("Downloaded content is not an SVG")
+            if not content.startswith(bytes([137,80,78,71,13,10,26,10])):
+                raise ValueError("Downloaded content is not a PNG")
             destination.write_bytes(content)
             time.sleep(0.1)
         else:
