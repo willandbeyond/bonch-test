@@ -1,4 +1,4 @@
-Run: 43428833999
+Run: 43434841994
 Result: failure
 Downloaded bytes: 2041412
 File type: Zip archive data, made by v2.0 UNIX, extract using at least v2.0, last modified Sep 04 2026 18:09:02, uncompressed size 0, method=store
@@ -12,3 +12,41 @@ ZIP test:
     testing: Running The Union #40 South Dakota Ave.gpx   OK
     testing: Running The Union #35 West Virginia Ave.gpx   OK
 No errors detected in compressed data of routes.zip.
+Classifier log:
+CLASSIFY #28 Texas Ave: 144 points
+  DONE: 79 named-road edges, 64 connector edges
+CLASSIFY #29 Iowa Ave: 22 points
+  DONE: 12 named-road edges, 9 connector edges
+CLASSIFY #30 Wisconsin Ave: 53 points
+  DONE: 52 named-road edges, 0 connector edges
+CLASSIFY #31 California St: 17 points
+  SKIPPED: incomplete OSM coverage
+CLASSIFY #32 Minnesota Ave: 105 points
+  DONE: 91 named-road edges, 13 connector edges
+CLASSIFY #33 Oregon Ave: 38 points
+  DONE: 37 named-road edges, 0 connector edges
+CLASSIFY #34 Kansas Ave: 50 points
+  DONE: 39 named-road edges, 10 connector edges
+CLASSIFY #35 West Virginia Ave: 21 points
+  DONE: 20 named-road edges, 0 connector edges
+CLASSIFY #36 Nevada Ave: 42 points
+  DONE: 41 named-road edges, 0 connector edges
+CLASSIFY #37 Nebraska Ave: 123 points
+  DONE: 60 named-road edges, 62 connector edges
+CLASSIFY #38 Colorado Ave: 36 points
+  DONE: 35 named-road edges, 0 connector edges
+CLASSIFY #39 North Dakota Ave: 11 points
+  DONE: 10 named-road edges, 0 connector edges
+CLASSIFY #40 South Dakota Ave: 57 points
+  DONE: 42 named-road edges, 14 connector edges
+CLASSIFY #41 Montana Ave: 54 points
+  DONE: 35 named-road edges, 18 connector edges
+CLASSIFY #42 Washington Ave: 23 points
+  DONE: 22 named-road edges, 0 connector edges
+CLASSIFY #43 Idaho Ave: 25 points
+  DONE: 18 named-road edges, 6 connector edges
+FAILED: ['#31 California St: 0 ways, 0 failed chunks']
+Traceback (most recent call last):
+  File "/home/runner/work/bonch-test/bonch-test/union/classify_remaining.py", line 100, in <module>
+    raise RuntimeError("; ".join(failures))
+RuntimeError: #31 California St: 0 ways, 0 failed chunks
