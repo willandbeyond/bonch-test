@@ -3,6 +3,7 @@
 import json
 import pathlib
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 
@@ -13,8 +14,16 @@ HEADERS = {"User-Agent": "RunningTheUnion/1.0 (static flag cache for personal ru
 
 def fetch(url):
     req = urllib.request.Request(url, headers=HEADERS)
-    with urllib.request.urlopen(req, timeout=45) as response:
-        return response.read()
+    for attempt in range(6):
+        try:
+            with urllib.request.urlopen(req, timeout=45) as response:
+                return response.read()
+        except urllib.error.HTTPError as error:
+            if error.code != 429 or attempt == 5:
+                raise
+            wait = min(90, 15 * (attempt + 1))
+            print(f'Rate limited; waiting {wait}s before retry', flush=True)
+            time.sleep(wait)
 
 def image_url(state):
     names = [f"Flag of {state}.svg"]
@@ -40,7 +49,7 @@ for index, state in enumerate(STATES, 1):
             if b"<svg" not in content[:5000]:
                 raise ValueError("Downloaded content is not an SVG")
             destination.write_bytes(content)
-            time.sleep(0.15)
+            time.sleep(4)
         else:
             attribution = f"Flag of {state} (Wikimedia Commons)"
         manifest[str(index)] = {"state": state, "file": f"flags/{index:02d}.svg", "source": "Wikimedia Commons", "title": attribution}
