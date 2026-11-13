@@ -33,9 +33,9 @@ jobs:
                   (dest / name).write_bytes(archive.read(member))
                   print("Extracted", name)
           PY
-      - name: Import corrected Vermont and new Louisiana GPX
+      - name: Import new GPX route geometries
         run: python union/import_gpx.py
-      - name: Classify newly imported and corrected named roads
+      - name: Classify imported named roads
         run: python union/classify_remaining.py > union/classify-remaining-log.txt 2>&1
       - name: Publish route data
         run: |
@@ -43,7 +43,7 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add union/routes.geojson union/classify-remaining-log.txt
           if ! git diff --cached --quiet; then
-            git commit -m 'union: refresh Vermont and add Louisiana GPX traces'
+            git commit -m 'union: publish newly classified GPX routes'
             git push
           fi
 
@@ -66,6 +66,10 @@ jobs:
           } > union/import-diagnostics.txt
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if test -f union/classify-remaining-log.txt; then
+            echo 'Classifier log:' >> union/import-diagnostics.txt
+            tail -100 union/classify-remaining-log.txt >> union/import-diagnostics.txt
+          fi
           git add union/import-diagnostics.txt
           if ! git diff --cached --quiet; then
             git commit -m 'union: record GPX import diagnostics'
