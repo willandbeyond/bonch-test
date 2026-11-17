@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Running the Union · Route animation (TEST)</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#182a32;background:#f3f7f7}
+*{box-sizing:border-box}body{margin:0}header{background:#fff0f0;color:#ad2920;border-bottom:1px solid #eccaca;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:.83rem;font-weight:700}
+header a{color:inherit;text-decoration:none}header a:hover{text-decoration:underline}.test{font-size:.7rem;letter-spacing:.09em}
+main{max-width:1250px;margin:auto;padding:24px 18px 34px}
+.eyebrow{color:#087f8c;text-transform:uppercase;letter-spacing:.16em;font-size:.73rem;font-weight:800;margin:0 0 7px}
+h1{font-size:clamp(1.6rem,3vw,2.5rem);letter-spacing:-.035em;margin:0 0 6px}
+.intro{margin:0 0 18px;color:#64737c;font-size:.92rem;max-width:750px;line-height:1.5}
+.stage{position:relative;overflow:hidden;border:1px solid #d6e1e3;border-radius:15px;background:#e9f1f0;box-shadow:0 8px 30px #172b3610}
+#map{height:min(67vh,650px);min-height:410px;width:100%;background:#e8f1f0}
+.leaflet-container{font-family:inherit}.leaflet-control-attribution{font-size:9px!important}
+.overlay{position:absolute;top:16px;left:16px;z-index:500;background:#ffffffed;backdrop-filter:blur(10px);border:1px solid #e3ebeb;border-radius:12px;padding:15px 18px;max-width:min(310px,calc(100% - 32px));box-shadow:0 6px 24px #10252c16;pointer-events:none}
+.counter{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:#74838a;font-weight:800}.route{font-size:clamp(1.2rem,2.5vw,1.7rem);font-weight:800;margin:5px 0 2px;letter-spacing:-.03em;line-height:1.2}.sub{font-size:.82rem;color:#667781}
+.progress-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:17px 0 8px}.progress-row strong{font-size:.9rem}.progress-row span{font-size:.8rem;color:#667781}
+input[type=range]{accent-color:#087f8c;width:100%;cursor:pointer}
+.controls{background:white;border:1px solid #d6e1e3;border-radius:14px;padding:16px 20px;margin-top:12px}
+.buttons{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px}
+button{font:inherit;border:1px solid #d2dfe1;border-radius:9px;background:#fff;padding:10px 16px;font-weight:700;cursor:pointer;color:#31454e}
+button.primary{background:#087f8c;color:#fff;border-color:#087f8c;min-width:110px}button:hover{filter:brightness(.96)}button:disabled{opacity:.45;cursor:default}
+.speed{display:flex;align-items:center;gap:8px;margin-left:auto;font-size:.83rem;color:#60727b}.speed select{padding:9px;border:1px solid #d2dfe1;border-radius:8px;background:white;font:inherit}
+.legend{display:flex;gap:17px;flex-wrap:wrap;margin-top:14px;color:#62727a;font-size:.79rem}.swatch{display:inline-block;width:21px;height:4px;border-radius:4px;vertical-align:middle;margin-right:6px}.road{background:#087f8c}.connector{background:#e89b35}
+.status{font-size:.78rem;color:#637780;margin-top:10px}
+@media(max-width:650px){main{padding:17px 10px 24px}.intro{font-size:.83rem}.overlay{top:10px;left:10px;padding:10px 12px}.route{font-size:1.15rem}#map{height:58vh;min-height:380px}.controls{padding:13px}.speed{margin-left:0}.buttons{gap:8px}button{padding:9px 12px}}
+</style></head><body>
+<header><a href="../">← Running the Union</a><span class="test">TEST ENVIRONMENT · ANIMATION</span><a href="/">bonch.fyi</a></header>
+<main><p class="eyebrow">The 50-state challenge · Washington, DC</p><h1>Watch the Union take shape</h1><p class="intro">Fifty state-named roadways, drawn in the order their states joined the Union. Watch each route trace its way across DC, with connecting streets shown in orange.</p>
+<section class="stage" aria-label="Animated map of Running the Union routes"><div id="map"></div>
+<div class="overlay" aria-live="off"><div class="counter" id="counter">Ready to run · 0 / 50</div><div class="route" id="route">Running the Union</div><div class="sub" id="subtitle">Press Play to draw all 50 routes</div></div></section>
+<section class="controls"><div class="progress-row"><strong>Route animation</strong><span id="percent">0 of 50 routes</span></div><input type="range" id="scrub" min="0" max="50" step="0.01" value="0" aria-label="Animation position">
+<div class="buttons"><button class="primary" id="play">▶ Play</button><button id="restart">↺ Restart</button><button id="finish">Show all</button><label class="speed" for="speed">Speed <select id="speed"><option value="2.4">Relaxed</option><option value="1.2" selected>Normal</option><option value=".55">Fast</option><option value=".25">Very fast</option></select></label></div>
+<div class="legend"><span><i class="swatch road"></i>State-named roadway</span><span><i class="swatch connector"></i>Connecting streets</span></div><div class="status" id="status">Loading route geometries…</div></section>
+</main>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(()=>{
+const map=L.map('map',{scrollWheelZoom:false,zoomSnap:.1,zoomControl:true}).setView([38.9072,-77.0369],12);
+L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png?api_key=a0fb0873-2a51-49b8-a731-a27c73b31be1',{maxZoom:20,attribution:'&copy; Stadia Maps &copy; OpenMapTiles &copy; OpenStreetMap contributors'}).addTo(map);
+const el=id=>document.getElementById(id),play=el('play'),scrub=el('scrub'),speed=el('speed'),status=el('status');
+let routes=[],layers=[],position=0,running=false,last=0,frame=0,ready=false,rendered=-1;
+function line(coords,named){return L.polyline(coords,{color:named?'#087f8c':'#e89b35',weight:4,opacity:.92,interactive:false,lineCap:'round',lineJoin:'round'}).addTo(map)}
+function distance(a,b){const rad=Math.PI/180,p=a[0]*rad,q=b[0]*rad,dLat=(b[0]-a[0])*rad,dLon=(b[1]-a[1])*rad;const v=Math.sin(dLat/2)**2+Math.cos(p)*Math.cos(q)*Math.sin(dLon/2)**2;return 2*Math.asin(Math.min(1,Math.sqrt(v)))}
+function prepare(f){const coords=f.geometry.coordinates.map(p=>[p[1],p[0]]),flags=f.properties.namedRoadEdges;const cumulative=[0];for(let i=1;i<coords.length;i++)cumulative.push(cumulative[i-1]+distance(coords[i-1],coords[i]));return {name:f.properties.state,coords,flags,cumulative,total:cumulative.at(-1)}}
+function drawPartial(r,fraction){if(fraction<=0)return;const end=r.total*Math.min(1,fraction);let start=0;for(let i=0;i<r.flags.length;i++){const segmentEnd=r.cumulative[i+1];if(r.flags[i]!==r.flags[start]){if(r.cumulative[i]<=end)layers.push(line(r.coords.slice(start,i+1),r.flags[start]));start=i}if(segmentEnd>=end){const coords=r.coords.slice(start,i+1);const span=segmentEnd-r.cumulative[i];const t=span>0?(end-r.cumulative[i])/span:1;const a=r.coords[i],b=r.coords[i+1];coords.push([a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t]);layers.push(line(coords,r.flags[start]));return}}
+layers.push(line(r.coords.slice(start),r.flags[start]))}
+function paint(value){if(!ready)return;position=Math.max(0,Math.min(50,value));if(Math.abs(position-rendered)<.0005)return;rendered=position;layers.forEach(l=>map.removeLayer(l));layers=[];const whole=Math.floor(position);for(let i=0;i<Math.min(whole,50);i++)drawPartial(routes[i],1);if(whole<50&&position>whole)drawPartial(routes[whole],position-whole);
+const active=position>=50?49:Math.min(49,Math.floor(position)),completed=Math.floor(position),r=routes[active];el('counter').textContent=position>=50?'All 50 routes drawn':position===0?'Ready to run · 0 / 50':'Route '+(active+1)+' of 50';el('route').textContent=position===0?'Running the Union':position>=50?'The Union, complete':r.name;el('subtitle').textContent=position===0?'Press Play to draw all 50 routes':position>=50?'50 routes · One city':(completed)+' completed · '+(Math.round((position%1)*100))+'% of current route';el('percent').textContent=(position>=50?50:completed)+' of 50 routes';scrub.value=position.toFixed(3)}
+function stop(){running=false;cancelAnimationFrame(frame);play.textContent=position>=50?'↻ Replay':'▶ Play'}
+function tick(t){if(!running)return;if(last)position+=(t-last)/(Number(speed.value)*1000);last=t;if(position>=50){paint(50);stop();return}paint(position);frame=requestAnimationFrame(tick)}
+play.onclick=()=>{if(!ready)return;if(running){stop();return}if(position>=50)paint(0);running=true;last=0;play.textContent='Ⅱ Pause';frame=requestAnimationFrame(tick)};
+el('restart').onclick=()=>{stop();paint(0)};
+el('finish').onclick=()=>{stop();paint(50)};
+scrub.oninput=()=>{stop();paint(Number(scrub.value))};
+fetch('../routes.geojson').then(r=>{if(!r.ok)throw Error('Could not load route data');return r.json()}).then(g=>{routes=g.features.filter(f=>Number.isInteger(f.properties?.number)&&f.properties.number>=1&&f.properties.number<=50).sort((a,b)=>a.properties.number-b.properties.number).map(prepare);if(routes.length!==50)throw Error('Expected 50 routes; found '+routes.length);const bounds=L.latLngBounds(routes.flatMap(r=>r.coords));map.fitBounds(bounds,{paddingTopLeft:[50,38],paddingBottomRight:[35,38],maxZoom:14});ready=true;play.disabled=false;status.textContent='50 plotted routes loaded · approximately 60 seconds at normal speed. Drag the timeline to explore any point.';paint(0)}).catch(e=>{status.textContent='Unable to load routes: '+e.message;play.disabled=true});
+play.disabled=true;
+window.addEventListener('resize',()=>map.invalidateSize());
+})();
+</script></body></html>
