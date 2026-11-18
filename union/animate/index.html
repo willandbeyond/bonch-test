@@ -45,19 +45,9 @@ main > .intro{max-width:none;text-align:center}
 <script>
 (()=>{
 
-// Staging-only: manual basemap comparison; no automatic tile-error detection.
-const STADIA_BASEMAP='https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png?api_key=a0fb0873-2a51-49b8-a731-a27c73b31be1';
+// OpenFreeMap is the sole basemap provider.
 function setupTestBasemap(map){
- let provider=new URLSearchParams(location.search).get('basemap')==='stadia'?'stadia':'openfreemap',layer=null,button;
- function select(next){
-   const nextLayer=next==='stadia'?L.tileLayer(STADIA_BASEMAP,{maxZoom:20,maxNativeZoom:20,attribution:'&copy; Stadia Maps &copy; OpenMapTiles &copy; OpenStreetMap contributors'}):L.maplibreGL({style:'https://tiles.openfreemap.org/styles/positron',attribution:'&copy; <a href="https://openfreemap.org/">OpenFreeMap</a> &copy; OpenStreetMap contributors'});
-   if(layer)map.removeLayer(layer);layer=nextLayer;provider=next;layer.addTo(map);
-   if(button)button.textContent='Map: '+(provider==='stadia'?'Stadia':'OpenFreeMap')+' ▾';
-   const url=new URL(location.href);if(provider==='stadia')url.searchParams.set('basemap','stadia');else url.searchParams.delete('basemap');history.replaceState(null,'',url);
- }
- const control=L.control({position:'bottomleft'});
- control.onAdd=()=>{const wrap=L.DomUtil.create('div','leaflet-bar leaflet-control');button=L.DomUtil.create('button','',wrap);button.type='button';button.title='Switch basemap manually';button.style.cssText='background:white;border:0;padding:7px 9px;font:600 12px system-ui;color:#126e73;cursor:pointer;white-space:nowrap';L.DomEvent.disableClickPropagation(wrap);L.DomEvent.disableScrollPropagation(wrap);L.DomEvent.on(button,'click',()=>select(provider==='stadia'?'openfreemap':'stadia'));return wrap;};
- control.addTo(map);select(provider);
+ L.maplibreGL({style:'https://tiles.openfreemap.org/styles/positron',attribution:'&copy; <a href="https://openfreemap.org/">OpenFreeMap</a> &copy; OpenStreetMap contributors'}).addTo(map);
 }
 
 const map=L.map('map',{scrollWheelZoom:false,zoomSnap:.1,zoomControl:false,dragging:false,touchZoom:false,doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false}).setView([38.9072,-77.0369],12);
